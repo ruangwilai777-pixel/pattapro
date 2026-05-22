@@ -506,3 +506,7 @@ tr:hover td {
   color: #0f172a;
   box-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
 }
+
+.premium-3d-weather {
+  display: none !important;
+}
