@@ -96,7 +96,7 @@ body {
   padding: 1.5rem 2rem;
   min-height: 100vh;
   background-color: #020617;
-  background-image: linear-gradient(to bottom, rgba(2, 6, 23, 0.4), rgba(2, 6, 23, 0.8)), url('./assets/admin-bg-premium.png');
+  background-image: linear-gradient(to bottom, rgba(2, 6, 23, 0.4), rgba(2, 6, 23, 0.8)), url('./assets/bg.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
