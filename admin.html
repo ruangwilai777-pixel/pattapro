@@ -77,7 +77,7 @@
     </script>
     <script>
         (function() {
-            let currentViewMode = 'daily'; // 'daily' or 'summary'
+            let currentViewMode = 'summary'; // 'daily' or 'summary'
             
             function injectToggleAndSummary() {
                 // Find the main MonthlyTable header
@@ -97,10 +97,10 @@
                     toggleContainer.className = 'view-toggle-container animate-fade-in';
                     toggleContainer.style.marginLeft = '1rem';
                     toggleContainer.innerHTML = `
-                        <button class="view-toggle-btn active" id="toggle-daily-btn">
+                        <button class="view-toggle-btn ${currentViewMode === 'daily' ? 'active' : ''}" id="toggle-daily-btn">
                             <span>ตารางรายวัน</span>
                         </button>
-                        <button class="view-toggle-btn" id="toggle-summary-btn">
+                        <button class="view-toggle-btn ${currentViewMode === 'summary' ? 'active' : ''}" id="toggle-summary-btn">
                             <span>สรุปยอดคนขับ</span>
                         </button>
                     `;
