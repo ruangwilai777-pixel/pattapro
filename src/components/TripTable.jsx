@@ -44,33 +44,45 @@ const TripTable = ({ trips, onDelete, onEdit, onExport }) => {
                                     <td style={{ fontWeight: '500' }}>{trip.route}</td>
                                     <td>{parseFloat(trip.price).toLocaleString()} ฿</td>
                                     <td style={{ color: 'var(--danger)' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                                             <span>{parseFloat(trip.fuel).toLocaleString()} ฿</span>
                                             {(trip.fuel_bill_url || trip.fuel_url) && (
-                                                <a href={trip.fuel_bill_url || trip.fuel_url} target="_blank" rel="noreferrer" title="กดดูรูปน้ำมัน" className="bill-icon-btn">
-                                                    <Camera size={16} />
+                                                <a href={trip.fuel_bill_url || trip.fuel_url} target="_blank" rel="noreferrer" title="กดดูรูปน้ำมัน" className="bill-thumbnail-link">
+                                                    <img 
+                                                        src={trip.fuel_bill_url || trip.fuel_url} 
+                                                        alt="รูปน้ำมัน" 
+                                                        className="receipt-thumbnail"
+                                                    />
                                                 </a>
                                             )}
                                         </div>
                                     </td>
                                     <td style={{ color: 'var(--danger)' }}>-{parseFloat(trip.wage).toLocaleString()} ฿</td>
                                     <td style={{ color: 'var(--danger)' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                                             <span>{parseFloat(trip.maintenance || 0).toLocaleString()} ฿</span>
                                             {(trip.maintenance_bill_url || trip.maintenance_url) && (
-                                                <a href={trip.maintenance_bill_url || trip.maintenance_url} target="_blank" rel="noreferrer" title="กดดูรูปค่าซ่อม" className="bill-icon-btn">
-                                                    <Camera size={16} />
+                                                <a href={trip.maintenance_bill_url || trip.maintenance_url} target="_blank" rel="noreferrer" title="กดดูรูปค่าซ่อม" className="bill-thumbnail-link">
+                                                    <img 
+                                                        src={trip.maintenance_bill_url || trip.maintenance_url} 
+                                                        alt="รูปค่าซ่อม" 
+                                                        className="receipt-thumbnail"
+                                                    />
                                                 </a>
                                             )}
                                         </div>
                                     </td>
                                     <td style={{ color: 'var(--warning-intense)' }}>-{parseFloat(trip.advance || 0).toLocaleString()} ฿</td>
                                     <td style={{ color: 'var(--success)' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                                             <span>+{parseFloat(trip.basket || 0).toLocaleString()} ฿</span>
                                             {(trip.basket_bill_url || trip.basket_url) && (
-                                                <a href={trip.basket_bill_url || trip.basket_url} target="_blank" rel="noreferrer" title="กดดูรูปตะกร้า" className="bill-icon-btn">
-                                                    <Camera size={16} />
+                                                <a href={trip.basket_bill_url || trip.basket_url} target="_blank" rel="noreferrer" title="กดดูรูปตะกร้า" className="bill-thumbnail-link">
+                                                    <img 
+                                                        src={trip.basket_bill_url || trip.basket_url} 
+                                                        alt="รูปตะกร้า" 
+                                                        className="receipt-thumbnail"
+                                                    />
                                                 </a>
                                             )}
                                         </div>
@@ -99,6 +111,26 @@ const TripTable = ({ trips, onDelete, onEdit, onExport }) => {
                     </tbody>
                 </table>
             </div>
+            <style>{`
+                .bill-thumbnail-link { display: inline-flex; align-items: center; justify-content: center; }
+                .receipt-thumbnail {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 6px;
+                    object-fit: cover;
+                    border: 1px solid rgba(255, 255, 255, 0.15);
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                    cursor: pointer;
+                    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s, border-color 0.2s;
+                }
+                .receipt-thumbnail:hover {
+                    transform: scale(2.5);
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+                    border-color: var(--primary);
+                    position: relative;
+                    z-index: 999;
+                }
+            `}</style>
         </div>
     );
 };
