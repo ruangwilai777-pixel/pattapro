@@ -18,5 +18,6 @@
             "src": "icon-512.png"
         }
     ],
-    "start_url": "/admin.html"
+    "start_url": "/admin.html#/admin",
+    "scope": "/"
 }

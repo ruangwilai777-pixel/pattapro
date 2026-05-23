@@ -1,9 +1,9 @@
 ﻿{
     "theme_color": "#1e293b",
-    "name": "แอดมิน - Patta Transport",
+    "name": "ภัทธา ทรานสปอร์ต",
     "background_color": "#0f172a",
     "display": "standalone",
-    "short_name": "แอดมินภัทธา",
+    "short_name": "ภัทธา",
     "icons": [
         {
             "purpose": "any maskable",
@@ -18,5 +18,5 @@
             "src": "icon-512.png"
         }
     ],
-    "start_url": "/admin.html"
+    "start_url": "/#/"
 }
