@@ -66,7 +66,17 @@ const Dashboard = () => {
     };
 
     const handleEditTrip   = (trip) => { setEditingTrip(trip); setIsModalOpen(true); };
-    const handleUpdateTrip = async (id, data) => { await updateTrip(id, data); setEditingTrip(null); setIsModalOpen(false); };
+    const handleUpdateTrip = async (id, data) => {
+        await updateTrip(id, data);
+        if (editingTrip && editingTrip.groupedIds && editingTrip.groupedIds.length > 1) {
+            const extraIds = editingTrip.groupedIds.filter(gId => gId !== id);
+            for (const extraId of extraIds) {
+                await deleteTrip(extraId);
+            }
+        }
+        setEditingTrip(null);
+        setIsModalOpen(false);
+    };
     const handleAddTrip    = async (data) => { await addTrip(data); setIsModalOpen(false); };
     const handleSelectDate = (date) => {
         setFormDate({ value: date, ts: Date.now() });
