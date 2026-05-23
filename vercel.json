@@ -3,6 +3,6 @@
   "rewrites": [
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/driver", "destination": "/index.html" },
-    { "source": "/((?!assets/|.*\\..*$).*)", "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
