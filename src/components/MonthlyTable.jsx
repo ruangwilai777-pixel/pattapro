@@ -291,7 +291,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                                 className="btn btn-outline"
                                                 style={{ padding: '0.3rem 0.5rem', fontSize: '0.7rem', whiteSpace: 'nowrap' }}
                                                 onClick={() => {
-                                                    const url = `${window.location.origin}${window.location.pathname}#/driver?view=${encodeURIComponent(name)}`;
+                                                     const url = `${window.location.origin}/#/driver?view=${encodeURIComponent(name)}`;
                                                     navigator.clipboard.writeText(url);
                                                     alert(`ก๊อปปี้ลิงก์สลิปของ ${name} เรียบร้อย!`);
                                                 }}
