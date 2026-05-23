@@ -107,18 +107,16 @@ const DriverEntry = () => {
         updatePresetsForDate(formData.date);
     }, [formData.date, fetchPresets]);
 
-    // Auto-open slip if requested via URL (?view=Name or #/driver?view=Name)
+    // Auto-open slip if requested via URL (?view=Name)
     useEffect(() => {
-        let viewName = new URLSearchParams(window.location.search).get('view');
-        if (!viewName) {
-            const hash = window.location.hash;
-            if (hash.includes('?')) {
-                viewName = new URLSearchParams(hash.split('?')[1]).get('view');
+        const hash = window.location.hash;
+        if (hash.includes('?')) {
+            const params = new URLSearchParams(hash.split('?')[1]);
+            const viewName = params.get('view');
+            if (viewName) {
+                setFormData(prev => ({ ...prev, driverName: viewName }));
+                setShowSlip(true);
             }
-        }
-        if (viewName) {
-            setFormData(prev => ({ ...prev, driverName: viewName }));
-            setShowSlip(true);
         }
     }, [trips]);
 

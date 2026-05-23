@@ -1,11 +1,10 @@
 import React from 'react';
-import { Download, ChevronLeft, ChevronRight, Plus, Edit2, Trash2, ReceiptText, Camera, History, X, Truck, CheckCircle2, Wrench, Banknote } from 'lucide-react';
+import { Download, ChevronLeft, ChevronRight, Plus, Edit2, Trash2, ReceiptText, Camera, History, X } from 'lucide-react';
 import SalarySlip from './SalarySlip';
 
 const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExport, onSelectDate, onEditTrip, onDeleteTrip, cnDeductions, setCnDeductions, showSlips = true, onlySlips = false }) => {
     const [selectedDriverForSlip, setSelectedDriverForSlip] = React.useState(null);
     const [selectedDriverForHistory, setSelectedDriverForHistory] = React.useState(null);
-    const [viewMode, setViewMode] = React.useState('daily');
 
     const months = [
         'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
@@ -26,104 +25,6 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
     };
 
     const datesInRange = getDatesInRange();
-
-    // Filter trips in the current 20th to 19th period
-    const tripsInPeriod = React.useMemo(() => {
-        const start = new Date(currentYear, currentMonth - 1, 20);
-        const end = new Date(currentYear, currentMonth, 19);
-        const startStr = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}-20`;
-        const endStr = `${end.getFullYear()}-${String(end.getMonth() + 1).padStart(2, '0')}-19`;
-        return trips.filter(t => t.date && t.date >= startStr && t.date <= endStr);
-    }, [trips, currentMonth, currentYear]);
-
-    // Drivers summary statistics aggregated in React
-    const driversStats = React.useMemo(() => {
-        const drivers = {};
-        tripsInPeriod.forEach(t => {
-            const driverName = (t.driverName || t.driver_name || 'ไม่ระบุชื่อ').trim();
-            if (!driverName || driverName === '-' || driverName === 'ไม่ระบุชื่อ') return;
-
-            if (!drivers[driverName]) {
-                drivers[driverName] = {
-                    name: driverName,
-                    trips: 0,
-                    price: 0,
-                    fuel: 0,
-                    wage: 0,
-                    maintenance: 0,
-                    basket: 0,
-                    basketShare: 0,
-                    advance: 0,
-                    profit: 0
-                };
-            }
-
-            const d = drivers[driverName];
-            d.trips += 1;
-            d.price += parseFloat(t.price) || 0;
-            d.fuel += parseFloat(t.fuel) || 0;
-            d.wage += parseFloat(t.wage) || 0;
-            d.maintenance += parseFloat(t.maintenance) || 0;
-            d.basket += parseFloat(t.basket) || 0;
-            d.basketShare += parseFloat(t.basketShare || t.basket_share || t.staff_share) || 0;
-            d.advance += parseFloat(t.staffShare || t.advance || t.staff_advance) || 0;
-            d.profit += parseFloat(t.profit) || 0;
-        });
-        return Object.values(drivers);
-    }, [tripsInPeriod]);
-
-    // System-wide overview aggregated metrics
-    const overviewMetrics = React.useMemo(() => {
-        let totalTrips = tripsInPeriod.length;
-        let totalRevenue = 0;
-        let totalFuel = 0;
-        let totalWages = 0;
-        let totalMaintenance = 0;
-        let totalBaskets = 0;
-        let totalBasketShare = 0;
-        let totalAdvances = 0;
-        let totalProfit = 0;
-
-        tripsInPeriod.forEach(t => {
-            const driverName = (t.driverName || t.driver_name || '').trim();
-            if (!driverName || driverName === '-' || driverName === 'ไม่ระบุชื่อ') return;
-
-            totalRevenue += parseFloat(t.price) || 0;
-            totalWages += parseFloat(t.wage) || 0;
-            totalBaskets += parseFloat(t.basket) || 0;
-            totalBasketShare += parseFloat(t.basketShare || t.basket_share || t.staff_share) || 0;
-            totalFuel += parseFloat(t.fuel) || 0;
-            totalAdvances += parseFloat(t.staffShare || t.advance || t.staff_advance) || 0;
-            totalMaintenance += parseFloat(t.maintenance) || 0;
-            totalProfit += parseFloat(t.profit) || 0;
-        });
-
-        const totalExpenses = totalFuel + totalWages + totalMaintenance + totalBasketShare;
-        const netProfitMargin = totalRevenue > 0 ? (totalProfit / totalRevenue * 100) : 0;
-
-        const fuelRatio = totalRevenue > 0 ? (totalFuel / totalRevenue * 100) : 0;
-        const wageRatio = totalRevenue > 0 ? (totalWages / totalRevenue * 100) : 0;
-        const maintRatio = totalRevenue > 0 ? (totalMaintenance / totalRevenue * 100) : 0;
-        const shareRatio = totalRevenue > 0 ? (totalBasketShare / totalRevenue * 100) : 0;
-
-        return {
-            totalTrips,
-            totalRevenue,
-            totalFuel,
-            totalWages,
-            totalMaintenance,
-            totalBaskets,
-            totalBasketShare,
-            totalAdvances,
-            totalProfit,
-            totalExpenses,
-            netProfitMargin,
-            fuelRatio,
-            wageRatio,
-            maintRatio,
-            shareRatio
-        };
-    }, [tripsInPeriod]);
 
     const getDayData = (date) => {
         const y = date.getFullYear();
@@ -155,8 +56,8 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
     return (
         <div className="glass-card fade-in" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             {!onlySlips && (
-                <div className="header" style={{ padding: '1rem 1.5rem', marginBottom: '0', flexShrink: 0, flexWrap: 'wrap', gap: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <div className="header" style={{ padding: '1rem 1.5rem', marginBottom: '0', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <div>
                             <h3 style={{ fontSize: '1.25rem' }}>ตารางรอบสรุปยอด (20 - 19)</h3>
                             <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
@@ -169,64 +70,6 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                 {months[currentMonth]} {currentYear}
                             </span>
                             <button className="btn-icon" onClick={() => onMonthChange(1)}><ChevronRight size={18} /></button>
-                        </div>
-
-                        {/* Gold-themed sliding toggle buttons */}
-                        <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(15, 23, 42, 0.4)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.25rem', gap: '0.25rem', boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)' }}>
-                            <button 
-                                className={`view-toggle-btn ${viewMode === 'overview' ? 'active' : ''}`}
-                                onClick={() => setViewMode('overview')}
-                                style={{
-                                    padding: '0.5rem 1rem',
-                                    border: 'none',
-                                    background: viewMode === 'overview' ? 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)' : 'transparent',
-                                    color: viewMode === 'overview' ? 'black' : '#94a3b8',
-                                    fontSize: '0.8rem',
-                                    fontWeight: '700',
-                                    cursor: 'pointer',
-                                    borderRadius: '9px',
-                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    boxShadow: viewMode === 'overview' ? '0 4px 12px rgba(251, 191, 36, 0.3)' : 'none'
-                                }}
-                            >
-                                ภาพรวมระบบ
-                            </button>
-                            <button 
-                                className={`view-toggle-btn ${viewMode === 'summary' ? 'active' : ''}`}
-                                onClick={() => setViewMode('summary')}
-                                style={{
-                                    padding: '0.5rem 1rem',
-                                    border: 'none',
-                                    background: viewMode === 'summary' ? 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)' : 'transparent',
-                                    color: viewMode === 'summary' ? 'black' : '#94a3b8',
-                                    fontSize: '0.8rem',
-                                    fontWeight: '700',
-                                    cursor: 'pointer',
-                                    borderRadius: '9px',
-                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    boxShadow: viewMode === 'summary' ? '0 4px 12px rgba(251, 191, 36, 0.3)' : 'none'
-                                }}
-                            >
-                                สรุปยอดคนขับ
-                            </button>
-                            <button 
-                                className={`view-toggle-btn ${viewMode === 'daily' ? 'active' : ''}`}
-                                onClick={() => setViewMode('daily')}
-                                style={{
-                                    padding: '0.5rem 1rem',
-                                    border: 'none',
-                                    background: viewMode === 'daily' ? 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)' : 'transparent',
-                                    color: viewMode === 'daily' ? 'black' : '#94a3b8',
-                                    fontSize: '0.8rem',
-                                    fontWeight: '700',
-                                    cursor: 'pointer',
-                                    borderRadius: '9px',
-                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    boxShadow: viewMode === 'daily' ? '0 4px 12px rgba(251, 191, 36, 0.3)' : 'none'
-                                }}
-                            >
-                                ตารางงานรายวัน
-                            </button>
                         </div>
                     </div>
                     <button className="btn btn-outline" onClick={onExport}>
@@ -291,7 +134,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                                 className="btn btn-outline"
                                                 style={{ padding: '0.3rem 0.5rem', fontSize: '0.7rem', whiteSpace: 'nowrap' }}
                                                 onClick={() => {
-                                                     const url = `${window.location.origin}/#/driver?view=${encodeURIComponent(name)}`;
+                                                    const url = `${window.location.origin}${window.location.pathname}#/driver?view=${encodeURIComponent(name)}`;
                                                     navigator.clipboard.writeText(url);
                                                     alert(`ก๊อปปี้ลิงก์สลิปของ ${name} เรียบร้อย!`);
                                                 }}
@@ -314,7 +157,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                 </div>
             )}
 
-            {viewMode === 'daily' && !onlySlips && (
+            {!onlySlips && (
                 <div className="table-container" style={{ width: '100%', overflowX: 'auto' }}>
                     <table style={{ minWidth: '1000px' }}>
                         <thead style={{ position: 'sticky', top: 0, zIndex: 1000, background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)' }}>
@@ -355,12 +198,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                                     {date.toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
                                                 </span>
                                             </td>
-                                            <td colSpan={10} style={{ textAlign: 'center', color: 'var(--text-dim)', opacity: 0.6, fontSize: '0.75rem' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                                                    <Plus size={14} color="var(--primary)" />
-                                                    <span>คลิกเพื่อเพิ่มรายการ (ราคาค่าเที่ยว)</span>
-                                                </div>
-                                            </td>
+                                            <td colSpan={10} style={{ textAlign: 'center', color: 'var(--text-dim)', opacity: 0.3, fontSize: '0.7rem' }}>ไม่มีรายการ (คลิกเพื่อเพิ่ม)</td>
                                             <td></td>
                                         </tr>
                                     )];
@@ -444,9 +282,6 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                         </td>
                                         <td style={{ padding: '0.5rem', textAlign: 'center' }}>
                                             <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                                                <button className="btn-icon" onClick={() => onSelectDate(dateStr)} style={{ padding: '4px' }} title="เพิ่มเที่ยววิ่งวันนี้">
-                                                    <Plus size={16} color="var(--primary)" />
-                                                </button>
                                                 <button className="btn-icon" onClick={() => onEditTrip(trip)} style={{ padding: '4px' }} title="แก้ไข">
                                                     <Edit2 size={16} color="var(--primary)" />
                                                 </button>
@@ -524,248 +359,6 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                     </tr>
                                 );
                             })()}
-                        </tfoot>
-                    </table>
-                </div>
-            )}
-
-            {viewMode === 'overview' && !onlySlips && (
-                <div className="system-overview-container animate-fade-in" style={{ padding: '1.5rem', color: 'white' }}>
-                    <div className="overview-dashboard" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        
-                        {/* Top Row: Summary Info */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '1rem', flexWrap: 'wrap', gap: '1rem' }}>
-                            <div>
-                                <h4 style={{ fontSize: '1.1rem', color: '#fbbf24', fontFamily: "'Chakra Petch', sans-serif", margin: 0 }}>ภาพรวมและสรุปผลประกอบการระบบ</h4>
-                                <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: '0.2rem 0 0 0' }}>วิเคราะห์สถิติรายรับ รายจ่าย และผลกำไรประจำรอบบิลนี้</p>
-                            </div>
-                            <div style={{ background: 'rgba(251, 191, 36, 0.1)', border: '1px solid rgba(251, 191, 36, 0.2)', padding: '0.3rem 0.8rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '600', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                                <span style={{ width: '6px', height: '6px', background: '#fbbf24', borderRadius: '50%', boxShadow: '0 0 8px #fbbf24' }}></span>
-                                <span>ข้อมูลสรุปเรียลไทม์</span>
-                            </div>
-                        </div>
-
-                        {/* KPI Grid */}
-                        <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
-                            
-                            {/* Card 1: Revenue */}
-                            <div className="kpi-card glass-card" style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', padding: '1.25rem', position: 'relative', overflow: 'hidden' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContext: 'space-between', marginBottom: '0.75rem' }}>
-                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500' }}>รายรับรวมทั้งหมด</span>
-                                    <div style={{ background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)', width: '32px', height: '32px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(217, 119, 6, 0.3)' }}>
-                                        <Banknote size={16} color="white" />
-                                    </div>
-                                </div>
-                                <div style={{ fontSize: '1.45rem', fontWeight: '800', fontFamily: "'Outfit', sans-serif", color: 'white' }}>฿{overviewMetrics.totalRevenue.toLocaleString()}</div>
-                                <div style={{ fontSize: '0.7rem', color: '#fbbf24', marginTop: '0.25rem' }}>รายได้จากค่าเที่ยวและบริการ</div>
-                            </div>
-
-                            {/* Card 2: Net Profit */}
-                            <div className="kpi-card glass-card" style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', padding: '1.25rem', position: 'relative', overflow: 'hidden' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContext: 'space-between', marginBottom: '0.75rem' }}>
-                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500' }}>กำไรสุทธิ</span>
-                                    <div style={{ background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)', width: '32px', height: '32px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(16, 185, 129, 0.3)' }}>
-                                        <CheckCircle2 size={16} color="white" />
-                                    </div>
-                                </div>
-                                <div style={{ fontSize: '1.45rem', fontWeight: '800', fontFamily: "'Outfit', sans-serif", color: '#10b981' }}>฿{Math.round(overviewMetrics.totalProfit).toLocaleString()}</div>
-                                <div style={{ fontSize: '0.7rem', color: '#34d399', marginTop: '0.25rem', display: 'flex', gap: '0.25rem' }}>
-                                    <span style={{ background: 'rgba(16, 185, 129, 0.15)', padding: '0.1rem 0.3rem', borderRadius: '4px', fontWeight: '700' }}>Margin {overviewMetrics.netProfitMargin.toFixed(1)}%</span>
-                                    <span>ของรายรับ</span>
-                                </div>
-                            </div>
-
-                            {/* Card 3: Expenses */}
-                            <div className="kpi-card glass-card" style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', padding: '1.25rem', position: 'relative', overflow: 'hidden' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContext: 'space-between', marginBottom: '0.75rem' }}>
-                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500' }}>รายจ่ายของระบบ</span>
-                                    <div style={{ background: 'linear-gradient(135deg, #f43f5e 0%, #be123c 100%)', width: '32px', height: '32px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(244, 63, 94, 0.3)' }}>
-                                        <Wrench size={16} color="white" />
-                                    </div>
-                                </div>
-                                <div style={{ fontSize: '1.45rem', fontWeight: '800', fontFamily: "'Outfit', sans-serif", color: '#f43f5e' }}>฿{overviewMetrics.totalExpenses.toLocaleString()}</div>
-                                <div style={{ fontSize: '0.7rem', color: '#fb7185', marginTop: '0.25rem' }}>น้ำมัน + ค่าแรง + ซ่อม + แบ่งตะกร้า</div>
-                            </div>
-
-                            {/* Card 4: Trip Stats */}
-                            <div className="kpi-card glass-card" style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', padding: '1.25rem', position: 'relative', overflow: 'hidden' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContext: 'space-between', marginBottom: '0.75rem' }}>
-                                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500' }}>จำนวนเที่ยวและเฉลี่ย</span>
-                                    <div style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)', width: '32px', height: '32px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(99, 102, 241, 0.3)' }}>
-                                        <Truck size={16} color="white" />
-                                    </div>
-                                </div>
-                                <div style={{ fontSize: '1.45rem', fontWeight: '800', fontFamily: "'Outfit', sans-serif", color: '#818cf8' }}>{overviewMetrics.totalTrips} เที่ยว</div>
-                                <div style={{ fontSize: '0.7rem', color: '#a5b4fc', marginTop: '0.25rem' }}>เฉลี่ย ฿{(overviewMetrics.totalTrips > 0 ? Math.round(overviewMetrics.totalRevenue / overviewMetrics.totalTrips) : 0).toLocaleString()} / เที่ยว</div>
-                            </div>
-
-                        </div>
-
-                        {/* Bottom Grid: Ratios & Basket Details */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-                            
-                            {/* Left Box: Expense Ratio Breakdown */}
-                            <div className="glass-card" style={{ background: 'rgba(15, 23, 42, 0.2)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '20px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                                <h5 style={{ fontSize: '0.9rem', color: '#fbbf24', fontFamily: "'Chakra Petch', sans-serif", margin: 0 }}>อัตราส่วนค่าใช้จ่ายต่อรายรับ</h5>
-                                
-                                {/* Fuel Ratio */}
-                                <div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.4rem', color: '#cbd5e1' }}>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><span style={{ width: '8px', height: '8px', background: '#fb5424', borderRadius: '50%' }}></span>ค่าน้ำมัน (Fuel)</span>
-                                        <span style={{ fontWeight: '700', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalFuel.toLocaleString()} ({overviewMetrics.fuelRatio.toFixed(1)}%)</span>
-                                    </div>
-                                    <div style={{ height: '8px', background: 'rgba(255,255,255,0.04)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.02)' }}>
-                                        <div style={{ width: `${overviewMetrics.fuelRatio}%`, height: '100%', background: 'linear-gradient(90deg, #f59e0b, #fb5424)', borderRadius: '4px' }}></div>
-                                    </div>
-                                </div>
-
-                                {/* Wage Ratio */}
-                                <div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.4rem', color: '#cbd5e1' }}>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><span style={{ width: '8px', height: '8px', background: '#a855f7', borderRadius: '50%' }}></span>ค่าจ้างพนักงาน (Wages)</span>
-                                        <span style={{ fontWeight: '700', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalWages.toLocaleString()} ({overviewMetrics.wageRatio.toFixed(1)}%)</span>
-                                    </div>
-                                    <div style={{ height: '8px', background: 'rgba(255,255,255,0.04)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.02)' }}>
-                                        <div style={{ width: `${overviewMetrics.wageRatio}%`, height: '100%', background: 'linear-gradient(90deg, #c084fc, #a855f7)', borderRadius: '4px' }}></div>
-                                    </div>
-                                </div>
-
-                                {/* Maintenance Ratio */}
-                                <div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.4rem', color: '#cbd5e1' }}>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><span style={{ width: '8px', height: '8px', background: '#f87171', borderRadius: '50%' }}></span>ค่าซ่อมบำรุง (Maintenance)</span>
-                                        <span style={{ fontWeight: '700', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalMaintenance.toLocaleString()} ({overviewMetrics.maintRatio.toFixed(1)}%)</span>
-                                    </div>
-                                    <div style={{ height: '8px', background: 'rgba(255,255,255,0.04)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.02)' }}>
-                                        <div style={{ width: `${overviewMetrics.maintRatio}%`, height: '100%', background: 'linear-gradient(90deg, #f87171, #ef4444)', borderRadius: '4px' }}></div>
-                                    </div>
-                                </div>
-
-                                {/* Basket Share Ratio */}
-                                <div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.4rem', color: '#cbd5e1' }}>
-                                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><span style={{ width: '8px', height: '8px', background: '#fb7185', borderRadius: '50%' }}></span>แบ่งปันค่าตะกร้า (Basket Share)</span>
-                                        <span style={{ fontWeight: '700', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalBasketShare.toLocaleString()} ({overviewMetrics.shareRatio.toFixed(1)}%)</span>
-                                    </div>
-                                    <div style={{ height: '8px', background: 'rgba(255,255,255,0.04)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.02)' }}>
-                                        <div style={{ width: `${overviewMetrics.shareRatio}%`, height: '100%', background: 'linear-gradient(90deg, #fb7185, #f43f5e)', borderRadius: '4px' }}></div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            {/* Right Box: Basket Breakdown */}
-                            <div className="glass-card" style={{ background: 'rgba(15, 23, 42, 0.2)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '20px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                <h5 style={{ fontSize: '0.9rem', color: '#fbbf24', fontFamily: "'Chakra Petch', sans-serif", margin: 0 }}>วิเคราะห์ส่วนต่างตะกร้าและเงินสำรอง</h5>
-                                
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                                    <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', padding: '0.8rem 1rem', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <div>
-                                            <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500' }}>รายรับค่าตะกร้าสะสม (Basket In)</div>
-                                            <div style={{ fontSize: '0.7rem', color: '#a78bfa', marginTop: '0.1rem' }}>เก็บจากโรงงาน/ลูกค้า</div>
-                                        </div>
-                                        <div style={{ fontSize: '1.15rem', fontWeight: '800', color: '#34d399', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalBaskets.toLocaleString()}</div>
-                                    </div>
-
-                                    <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', padding: '0.8rem 1rem', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <div>
-                                            <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '500' }}>แบ่งค่าตะกร้าให้คนขับ (Basket Out)</div>
-                                            <div style={{ fontSize: '0.7rem', color: '#f43f5e', marginTop: '0.1rem' }}>จ่ายค่าตอบแทนให้พนักงาน</div>
-                                        </div>
-                                        <div style={{ fontSize: '1.15rem', fontWeight: '800', color: '#f87171', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalBasketShare.toLocaleString()}</div>
-                                    </div>
-
-                                    <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', padding: '0.8rem 1rem', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: '3px solid #fbbf24' }}>
-                                        <div>
-                                            <div style={{ fontSize: '0.75rem', color: '#fbbf24', fontWeight: '600' }}>ผลต่างค่าตะกร้า (Net Basket Profit)</div>
-                                            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: '0.1rem' }}>กำไรสะสมจากการหมุนตะกร้า</div>
-                                        </div>
-                                        <div style={{ fontSize: '1.15rem', fontWeight: '800', fontFamily: "'Outfit', sans-serif", color: (overviewMetrics.totalBaskets - overviewMetrics.totalBasketShare) >= 0 ? '#34d399' : '#ef4444' }}>
-                                            ฿{(overviewMetrics.totalBaskets - overviewMetrics.totalBasketShare).toLocaleString()}
-                                        </div>
-                                    </div>
-
-                                    <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', padding: '0.8rem 1rem', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <div>
-                                            <div style={{ fontSize: '0.75rem', color: '#cbd5e1', fontWeight: '500' }}>ยอดเบิกเงินสำรองสะสม (Staff Advances)</div>
-                                            <div style={{ fontSize: '0.7rem', color: '#fbbf24', marginTop: '0.1rem' }}>เบิกล่วงหน้าระหว่างรอบบิล</div>
-                                        </div>
-                                        <div style={{ fontSize: '1.15rem', fontWeight: '800', color: '#fbbf24', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalAdvances.toLocaleString()}</div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            )}
-
-            {viewMode === 'summary' && !onlySlips && (
-                <div className="table-container" style={{ width: '100%', overflowX: 'auto' }}>
-                    <table style={{ minWidth: '1000px' }}>
-                        <thead style={{ position: 'sticky', top: 0, zIndex: 1000, background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)' }}>
-                            <tr>
-                                <th style={{ width: '15%', padding: '0.5rem', textAlign: 'left' }}>คนขับ</th>
-                                <th style={{ width: '10%', padding: '0.5rem', textAlign: 'center' }}>จำนวนเที่ยว</th>
-                                <th style={{ width: '10%', padding: '0.5rem', textAlign: 'right' }}>ราคา</th>
-                                <th style={{ width: '9%', padding: '0.5rem', textAlign: 'right' }}>น้ำมัน</th>
-                                <th style={{ width: '9%', padding: '0.5rem', textAlign: 'right' }}>ค่าจ้าง</th>
-                                <th style={{ width: '9%', padding: '0.5rem', textAlign: 'right' }}>ค่าซ่อม</th>
-                                <th style={{ width: '9%', padding: '0.5rem', textAlign: 'right' }}>ตะกร้า</th>
-                                <th style={{ width: '9%', padding: '0.5rem', textAlign: 'right' }}>แบ่ง</th>
-                                <th style={{ width: '9%', padding: '0.5rem', textAlign: 'right' }}>เบิก</th>
-                                <th style={{ width: '11%', padding: '0.5rem', textAlign: 'center' }}>กำไรสุทธิ</th>
-                            </tr>
-                        </thead>
-                        <tbody style={{ fontSize: '0.8rem' }}>
-                            {driversStats.map(d => (
-                                <tr key={d.name} className="trip-row-hover">
-                                    <td style={{ padding: '0.75rem 0.5rem', color: 'var(--primary)', fontWeight: '600', textAlign: 'left' }}>{d.name}</td>
-                                    <td style={{ padding: '0.75rem 0.5rem', textAlign: 'center' }}>{d.trips} เที่ยว</td>
-                                    <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right' }}>{d.price > 0 ? d.price.toLocaleString() : '-'}</td>
-                                    <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--danger)' }}>{d.fuel > 0 ? d.fuel.toLocaleString() : '-'}</td>
-                                    <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--danger)' }}>{d.wage > 0 ? d.wage.toLocaleString() : '-'}</td>
-                                    <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--danger)' }}>{d.maintenance > 0 ? d.maintenance.toLocaleString() : '-'}</td>
-                                    <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--success)' }}>{d.basket > 0 ? d.basket.toLocaleString() : '-'}</td>
-                                    <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--danger)' }}>{d.basketShare > 0 ? d.basketShare.toLocaleString() : '-'}</td>
-                                    <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--warning)' }}>{d.advance > 0 ? d.advance.toLocaleString() : '-'}</td>
-                                    <td style={{ padding: '0.75rem 0.5rem', textAlign: 'center' }}>
-                                        <span className={`badge ${d.profit >= 0 ? 'badge-profit' : 'badge-loss'}`} style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem', float: 'none', display: 'inline-block', minWidth: '70px' }}>
-                                            {Math.round(d.profit).toLocaleString()}
-                                        </span>
-                                    </td>
-                                </tr>
-                            ))}
-                            {driversStats.length === 0 && (
-                                <tr>
-                                    <td colSpan="10" style={{ padding: '2rem', color: 'var(--text-dim)', opacity: 0.4, fontSize: '0.8rem', textAlign: 'center' }}>
-                                        ไม่มีรายชื่อวิ่งงานสำหรับรอบบิลนี้
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                        <tfoot style={{ position: 'sticky', bottom: 0, background: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(20px)', borderTop: '2px solid var(--primary-glow)', zIndex: 20 }}>
-                            <tr style={{ fontWeight: '800' }}>
-                                <td style={{ padding: '0.75rem 0.5rem', color: 'var(--primary)', textAlign: 'left', fontFamily: "'Chakra Petch', sans-serif", fontSize: '0.9rem' }}>
-                                    <div>รวมสรุป</div>
-                                    <div style={{ fontSize: '0.7rem', color: 'white', opacity: 0.8 }}>({overviewMetrics.totalTrips} เที่ยว)</div>
-                                </td>
-                                <td></td>
-                                <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalRevenue.toLocaleString()}</td>
-                                <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--danger)', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalFuel.toLocaleString()}</td>
-                                <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--danger)', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalWages.toLocaleString()}</td>
-                                <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--danger)', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalMaintenance.toLocaleString()}</td>
-                                <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--success)', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalBaskets.toLocaleString()}</td>
-                                <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--danger)', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalBasketShare.toLocaleString()}</td>
-                                <td style={{ padding: '0.75rem 0.5rem', textAlign: 'right', color: 'var(--warning)', fontFamily: "'Outfit', sans-serif" }}>฿{overviewMetrics.totalAdvances.toLocaleString()}</td>
-                                <td style={{ padding: '0.5rem 0' }}>
-                                    <div className={`badge ${overviewMetrics.totalProfit >= 0 ? 'badge-profit' : 'badge-loss'}`} style={{ fontSize: '0.85rem', width: '90%', margin: '0 auto', display: 'flex', justifyContent: 'center' }}>
-                                        ฿{Math.round(overviewMetrics.totalProfit).toLocaleString()}
-                                    </div>
-                                </td>
-                            </tr>
                         </tfoot>
                     </table>
                 </div>

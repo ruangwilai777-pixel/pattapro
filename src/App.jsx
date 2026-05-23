@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import DriverEntry from './pages/DriverEntry';
 import './index.css';
@@ -27,28 +27,13 @@ class ErrorBoundary extends React.Component {
 }
 
 function App() {
-  // Upgrade legacy hash routing to clean URLs
-  if (window.location.hash.includes('admin')) {
-    window.location.replace('/admin');
-    return null;
-  }
-
-  if (window.location.hash.includes('driver') || window.location.hash.includes('view=')) {
-    const hashStr = window.location.hash;
-    const searchPart = hashStr.includes('?') ? '?' + hashStr.split('?')[1] : '';
-    window.location.replace('/driver' + searchPart);
-    return null;
-  }
-
   return (
     <ErrorBoundary>
       <Router>
         <Routes>
           <Route path="/" element={<DriverEntry />} />
-          <Route path="/index.html" element={<DriverEntry />} />
           <Route path="/driver" element={<DriverEntry />} />
           <Route path="/admin" element={<Dashboard />} />
-          <Route path="/admin.html" element={<Dashboard />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <InstallPrompt />

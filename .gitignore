@@ -1,5 +1,0 @@
-node_modules/
-.DS_Store
-query_routes.js
-dist-ssr
-*.local

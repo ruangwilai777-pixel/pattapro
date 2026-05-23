@@ -63,20 +63,21 @@
     <meta name="apple-mobile-web-app-title" content="แอดมินภัทธา" />
     <meta name="theme-color" content="#1e293b" />
     <title>Admin - Patta Transport</title>
-  <script type="module" src="/src/main.jsx"></script>
+  <script type="module" crossorigin src="./assets/main-Dcs-rvvl.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-gNL91H-p.css">
 </head>
 
 <body>
     <div id="root"></div>
     <script>
-        // If there is an old admin hash, rewrite the URL cleanly
-        if (window.location.hash.includes('admin')) {
-            window.history.replaceState(null, '', '/admin');
+        // Force redirect to admin hash if not already there
+        if (!window.location.hash.includes('admin')) {
+            window.location.hash = '#/admin';
         }
     </script>
     <script>
-        /* (function() {
-            let currentViewMode = 'daily'; // Set 'daily' (System Overview) as default
+        (function() {
+            let currentViewMode = 'summary'; // 'daily' or 'summary'
             
             function injectToggleAndSummary() {
                 // Find the main MonthlyTable header
@@ -144,8 +145,8 @@
                     }, true);
                 }
                 
-                // 3. Ensure Summary & Overview Containers exist
-                const tableContainer = glassCard.querySelector('.table-container:not(.summary-table-container):not(.system-overview-container)');
+                // 3. Ensure Summary Table Container exists
+                const tableContainer = glassCard.querySelector('.table-container');
                 if (!tableContainer) return;
                 
                 let summaryContainer = glassCard.querySelector('.summary-table-container');
@@ -155,17 +156,8 @@
                     summaryContainer.style.display = 'none';
                     tableContainer.parentNode.insertBefore(summaryContainer, tableContainer.nextSibling);
                 }
-
-                let overviewContainer = glassCard.querySelector('.system-overview-container');
-                if (!overviewContainer) {
-                    overviewContainer = document.createElement('div');
-                    overviewContainer.className = 'system-overview-container';
-                    overviewContainer.style.display = 'none';
-                    overviewContainer.style.padding = '1.25rem 0';
-                    tableContainer.parentNode.insertBefore(overviewContainer, tableContainer.nextSibling);
-                }
                 
-                // 4. Update visibility
+                // 4. Update visibility and regenerate summary
                 updateVisibility();
             }
             
@@ -183,312 +175,19 @@
                 const glassCard = h3.closest('.glass-card');
                 if (!glassCard) return;
                 
-                const tableContainer = glassCard.querySelector('.table-container:not(.summary-table-container):not(.system-overview-container)');
+                const tableContainer = glassCard.querySelector('.table-container:not(.summary-table-container)');
                 const summaryContainer = glassCard.querySelector('.summary-table-container');
-                const overviewContainer = glassCard.querySelector('.system-overview-container');
-                if (!tableContainer || !summaryContainer || !overviewContainer) return;
+                if (!tableContainer || !summaryContainer) return;
                 
                 if (currentViewMode === 'daily') {
-                    document.body.classList.add('view-mode-daily');
-                    document.body.classList.remove('view-mode-summary');
-                    tableContainer.style.setProperty('display', 'none', 'important');
+                    tableContainer.style.setProperty('display', 'block', 'important');
                     summaryContainer.style.setProperty('display', 'none', 'important');
-                    overviewContainer.style.setProperty('display', 'block', 'important');
-                    generateOverview(tableContainer, overviewContainer);
                 } else {
-                    document.body.classList.add('view-mode-summary');
-                    document.body.classList.remove('view-mode-daily');
                     tableContainer.style.setProperty('display', 'none', 'important');
                     summaryContainer.style.setProperty('display', 'block', 'important');
-                    overviewContainer.style.setProperty('display', 'none', 'important');
                     generateSummary(tableContainer, summaryContainer);
                 }
             }
-
-            function generateOverview(tableContainer, overviewContainer) {
-                const rows = Array.from(tableContainer.querySelectorAll('tbody tr'));
-                
-                let totalTrips = 0;
-                let totalRevenue = 0;
-                let totalFuel = 0;
-                let totalWages = 0;
-                let totalMaintenance = 0;
-                let totalBaskets = 0;
-                let totalBasketShare = 0;
-                let totalAdvances = 0;
-                let totalProfit = 0;
-                
-                for (const row of rows) {
-                    if (row.cells.length < 12) continue; // Skip headers, empty state, footers
-                    const driverName = row.cells[1].textContent.trim();
-                    if (!driverName || driverName === '-' || driverName === 'ไม่ระบุชื่อ') continue;
-                    
-                    totalTrips += 1;
-                    totalRevenue += parseVal(row.cells[3]);      // index 3: ค่าเที่ยว
-                    totalWages += parseVal(row.cells[4]);        // index 4: ค่าจ้าง
-                    totalBaskets += parseVal(row.cells[5]);      // index 5: ค่าตะกร้า
-                    totalBasketShare += parseVal(row.cells[6]);  // index 6: ส่วนแบ่ง
-                    totalFuel += parseVal(row.cells[7]);         // index 7: น้ำมัน
-                    totalAdvances += parseVal(row.cells[8]);     // index 8: เบิก
-                    totalMaintenance += parseVal(row.cells[9]);  // index 9: ค่าซ่อม
-                    totalProfit += parseVal(row.cells[10]);      // index 10: กำไร
-                }
-                
-                const totalExpenses = totalFuel + totalWages + totalMaintenance + totalBasketShare;
-                const netProfitMargin = totalRevenue > 0 ? (totalProfit / totalRevenue * 100) : 0;
-                
-                const fuelRatio = totalRevenue > 0 ? (totalFuel / totalRevenue * 100) : 0;
-                const wageRatio = totalRevenue > 0 ? (totalWages / totalRevenue * 100) : 0;
-                const maintRatio = totalRevenue > 0 ? (totalMaintenance / totalRevenue * 100) : 0;
-                const shareRatio = totalRevenue > 0 ? (totalBasketShare / totalRevenue * 100) : 0;
-
-                // Inject Custom Styles programmatically if not present
-                if (!document.getElementById('overview-styles')) {
-                    const style = document.createElement('style');
-                    style.id = 'overview-styles';
-                    style.textContent = `
-                        .kpi-card {
-                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                        }
-                        .kpi-card:hover {
-                            transform: translateY(-4px);
-                            border-color: rgba(255, 255, 255, 0.15) !important;
-                            background: rgba(255, 255, 255, 0.04) !important;
-                            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4) !important;
-                        }
-                        @keyframes slideInUp {
-                            from {
-                                opacity: 0;
-                                transform: translateY(20px);
-                            }
-                            to {
-                                opacity: 1;
-                                transform: translateY(0);
-                            }
-                        }
-                        .animate-fade-in {
-                            animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                        }
-                        
-                        /* Robust React-Override Styles */
-                        body.view-mode-daily .table-container:not(.summary-table-container):not(.system-overview-container) {
-                            display: none !important;
-                        }
-                        body.view-mode-daily .summary-table-container {
-                            display: none !important;
-                        }
-                        body.view-mode-daily .system-overview-container {
-                            display: block !important;
-                        }
-                        
-                        body.view-mode-summary .table-container:not(.summary-table-container):not(.system-overview-container) {
-                            display: none !important;
-                        }
-                        body.view-mode-summary .summary-table-container {
-                            display: block !important;
-                        }
-                        body.view-mode-summary .system-overview-container {
-                            display: none !important;
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-
-                overviewContainer.innerHTML = `
-                    <div class="overview-dashboard animate-fade-in" style="display: flex; flex-direction: column; gap: 1.5rem; color: white;">
-                        <!-- Top Row: Summary Info -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem;">
-                            <div>
-                                <h4 style="font-size: 1.1rem; color: #fbbf24; font-family: 'Chakra Petch', sans-serif; margin: 0;">ภาพรวมและสรุปผลประกอบการระบบ</h4>
-                                <p style="font-size: 0.75rem; color: #94a3b8; margin: 0.2rem 0 0 0;">วิเคราะห์สถิติรายรับ รายจ่าย และผลกำไรประจำรอบบิลนี้</p>
-                            </div>
-                            <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; color: #fbbf24; display: flex; align-items: center; gap: 0.3rem;">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                                <span>ข้อมูลสรุปเรียลไทม์</span>
-                            </div>
-                        </div>
-                        
-                        <!-- KPI Grid -->
-                        <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-                            <!-- Card 1: Revenue -->
-                            <div class="kpi-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.25rem; position: relative; overflow: hidden;">
-                                <div style="position: absolute; right: -15px; bottom: -15px; opacity: 0.05; color: #fbbf24;">
-                                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-                                    <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 500;">รายรับรวมทั้งหมด</span>
-                                    <div style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                                    </div>
-                                </div>
-                                <div style="font-size: 1.45rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: white;">฿${totalRevenue.toLocaleString()}</div>
-                                <div style="font-size: 0.7rem; color: #fbbf24; margin-top: 0.25rem; display: flex; align-items: center; gap: 0.25rem;">
-                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                                    <span>รายได้จากค่าเที่ยวและบริการ</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 2: Net Profit -->
-                            <div class="kpi-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.25rem; position: relative; overflow: hidden;">
-                                <div style="position: absolute; right: -15px; bottom: -15px; opacity: 0.05; color: #10b981;">
-                                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-                                    <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 500;">กำไรสุทธิสุทธิ</span>
-                                    <div style="background: linear-gradient(135deg, #10b981 0%, #047857 100%); width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                    </div>
-                                </div>
-                                <div style="font-size: 1.45rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #10b981;">฿${Math.round(totalProfit).toLocaleString()}</div>
-                                <div style="font-size: 0.7rem; color: #34d399; margin-top: 0.25rem; display: flex; align-items: center; gap: 0.25rem;">
-                                    <span style="background: rgba(16, 185, 129, 0.15); padding: 0.1rem 0.3rem; border-radius: 4px; font-weight: 700;">Margin ${netProfitMargin.toFixed(1)}%</span>
-                                    <span>ของรายรับทั้งหมด</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 3: Total Expenses -->
-                            <div class="kpi-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.25rem; position: relative; overflow: hidden;">
-                                <div style="position: absolute; right: -15px; bottom: -15px; opacity: 0.05; color: #ef4444;">
-                                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-                                    <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 500;">ค่าใช้จ่ายรวม</span>
-                                    <div style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline><polyline points="17 18 23 18 23 12"></polyline></svg>
-                                    </div>
-                                </div>
-                                <div style="font-size: 1.45rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #f87171;">฿${totalExpenses.toLocaleString()}</div>
-                                <div style="font-size: 0.7rem; color: #f87171; margin-top: 0.25rem; display: flex; align-items: center; gap: 0.25rem;">
-                                    <span>รวมค่าน้ำมัน, ค่าแรง, ค่าซ่อม, และแบ่งตะกร้า</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Card 4: Trip Stats -->
-                            <div class="kpi-card" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.25rem; position: relative; overflow: hidden;">
-                                <div style="position: absolute; right: -15px; bottom: -15px; opacity: 0.05; color: #8b5cf6;">
-                                    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                                </div>
-                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
-                                    <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 500;">สถิติการวิ่งงาน</span>
-                                    <div style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/></svg>
-                                    </div>
-                                </div>
-                                <div style="font-size: 1.45rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: white;">${totalTrips} เที่ยว</div>
-                                <div style="font-size: 0.7rem; color: #c084fc; margin-top: 0.25rem; display: flex; align-items: center; gap: 0.25rem;">
-                                    <span>เฉลี่ย ฿${totalTrips > 0 ? Math.round(totalRevenue / totalTrips).toLocaleString() : 0} ต่อเที่ยววิ่ง</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Mid Section: Ratios and Detailed Breakdown -->
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 0.5rem;">
-                            
-                            <!-- Ratio Box -->
-                            <div style="background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem;">
-                                <h5 style="margin: 0; font-size: 0.9rem; font-family: 'Chakra Petch', sans-serif; color: #fbbf24; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;">สัดส่วนค่าใช้จ่ายเทียบกับรายรับรวม</h5>
-                                
-                                <!-- Fuel Progress -->
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.4rem; color: #cbd5e1;">
-                                        <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; background: #fb923c; border-radius: 50%;"></span>ค่าน้ำมันรถ (Fuel)</span>
-                                        <span style="font-weight: 700; font-family: 'Outfit', sans-serif;">฿${totalFuel.toLocaleString()} (${fuelRatio.toFixed(1)}%)</span>
-                                    </div>
-                                    <div style="height: 8px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.02);">
-                                        <div style="width: ${fuelRatio}%; height: 100%; background: linear-gradient(90deg, #fb923c, #f97316); border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Wage Progress -->
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.4rem; color: #cbd5e1;">
-                                        <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; background: #a78bfa; border-radius: 50%;"></span>ค่าจ้างคนขับ (Driver Wages)</span>
-                                        <span style="font-weight: 700; font-family: 'Outfit', sans-serif;">฿${totalWages.toLocaleString()} (${wageRatio.toFixed(1)}%)</span>
-                                    </div>
-                                    <div style="height: 8px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.02);">
-                                        <div style="width: ${wageRatio}%; height: 100%; background: linear-gradient(90deg, #a78bfa, #8b5cf6); border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Maintenance Progress -->
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.4rem; color: #cbd5e1;">
-                                        <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; background: #f87171; border-radius: 50%;"></span>ค่าซ่อมบำรุง (Maintenance)</span>
-                                        <span style="font-weight: 700; font-family: 'Outfit', sans-serif;">฿${totalMaintenance.toLocaleString()} (${maintRatio.toFixed(1)}%)</span>
-                                    </div>
-                                    <div style="height: 8px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.02);">
-                                        <div style="width: ${maintRatio}%; height: 100%; background: linear-gradient(90deg, #f87171, #ef4444); border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-
-                                <!-- Basket Share Progress -->
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.4rem; color: #cbd5e1;">
-                                        <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; background: #fb7185; border-radius: 50%;"></span>แบ่งปันค่าตะกร้า (Basket Share)</span>
-                                        <span style="font-weight: 700; font-family: 'Outfit', sans-serif;">฿${totalBasketShare.toLocaleString()} (${shareRatio.toFixed(1)}%)</span>
-                                    </div>
-                                    <div style="height: 8px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.02);">
-                                        <div style="width: ${shareRatio}%; height: 100%; background: linear-gradient(90deg, #fb7185, #f43f5e); border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Profit Margin Progress -->
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.4rem; color: #cbd5e1;">
-                                        <span style="display: flex; align-items: center; gap: 0.3rem;"><span style="width: 8px; height: 8px; background: #34d399; border-radius: 50%;"></span>อัตรากำไรสุทธิ (Profit Margin)</span>
-                                        <span style="font-weight: 700; font-family: 'Outfit', sans-serif; color: #34d399;">฿${Math.round(totalProfit).toLocaleString()} (${netProfitMargin.toFixed(1)}%)</span>
-                                    </div>
-                                    <div style="height: 8px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.02);">
-                                        <div style="width: ${netProfitMargin}%; height: 100%; background: linear-gradient(90deg, #34d399, #10b981); border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Basket & Cash Breakdown Box -->
-                            <div style="background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
-                                <h5 style="margin: 0; font-size: 0.9rem; font-family: 'Chakra Petch', sans-serif; color: #fbbf24; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem;">ธุรกรรมตะกร้าและกระแสเงินสดสำรอง</h5>
-                                
-                                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.2rem;">
-                                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); padding: 0.8rem 1rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                        <div>
-                                            <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 500;">รายรับค่าตะกร้าสะสม (Basket In)</div>
-                                            <div style="font-size: 0.7rem; color: #a78bfa; margin-top: 0.1rem;">เก็บจากโรงงาน/ลูกค้า</div>
-                                        </div>
-                                        <div style="font-size: 1.1rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #34d399;">฿${totalBaskets.toLocaleString()}</div>
-                                    </div>
-                                    
-                                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); padding: 0.8rem 1rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                        <div>
-                                            <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 500;">แบ่งค่าตะกร้าให้คนขับ (Basket Out)</div>
-                                            <div style="font-size: 0.7rem; color: #f43f5e; margin-top: 0.1rem;">จ่ายค่าตอบแทนให้พนักงาน</div>
-                                        </div>
-                                        <div style="font-size: 1.1rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #f87171;">฿${totalBasketShare.toLocaleString()}</div>
-                                    </div>
-
-                                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); padding: 0.8rem 1rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid #fbbf24;">
-                                        <div>
-                                            <div style="font-size: 0.75rem; color: #fbbf24; font-weight: 600;">ผลต่างค่าตะกร้า (Net Basket Profit)</div>
-                                            <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.1rem;">กำไรสะสมจากการหมุนตะกร้า</div>
-                                        </div>
-                                        <div style="font-size: 1.1rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: ${(totalBaskets - totalBasketShare) >= 0 ? '#34d399' : '#ef4444'}">
-                                            ฿${(totalBaskets - totalBasketShare).toLocaleString()}
-                                        </div>
-                                    </div>
-
-                                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); padding: 0.8rem 1rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                        <div>
-                                            <div style="font-size: 0.75rem; color: #cbd5e1; font-weight: 500;">ยอดเบิกเงินสำรองสะสม (Staff Advances)</div>
-                                            <div style="font-size: 0.7rem; color: #fbbf24; margin-top: 0.1rem;">เบิกล่วงหน้าระหว่างรอบบิล</div>
-                                        </div>
-                                        <div style="font-size: 1.1rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #fbbf24;">฿${totalAdvances.toLocaleString()}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
             
             function generateSummary(tableContainer, summaryContainer) {
                 const drivers = {};
@@ -783,7 +482,7 @@
             
             // Run initially as well
             setTimeout(injectToggleAndSummary, 1000);
-        })(); */
+        })();
     </script>
 </body>
 
