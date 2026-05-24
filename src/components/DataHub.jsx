@@ -72,6 +72,17 @@ const DataHub = ({
         return Object.values(map).sort((a,b) => b.trips - a.trips);
     }, [trips]);
 
+    /* ── Available Routes for Quick Select ── */
+    const allAvailableRoutes = useMemo(() => {
+        const presets = routePresets ? Object.keys(routePresets) : [];
+        const tripRoutes = trips ? Array.from(new Set(trips.map(t => t.route).filter(Boolean))) : [];
+        const combined = Array.from(new Set([...presets, ...tripRoutes])).sort();
+        return combined.map(route => {
+            const price = routePresets?.[route]?.price || '';
+            return { route, price };
+        });
+    }, [routePresets, trips]);
+
     const { 
         totalRevenue=0, totalProfit=0, totalTrips=0, totalFuel=0, 
         totalWage=0, totalMaintenance=0, totalBasketShare=0, 
@@ -449,6 +460,62 @@ const DataHub = ({
                                 </div>
                             </div>
 
+                            {/* ตัวเลือกด่วนจากรายการวิ่ง */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                                <label style={{ fontSize: '0.78rem', fontWeight: '700', color: '#94a3b8' }}>เลือกด่วนจากรายการวิ่ง (คลิกเพื่อเลือกทันที)</label>
+                                {allAvailableRoutes.length === 0 ? (
+                                    <div style={{ fontSize: '0.72rem', color: '#64748b', fontStyle: 'italic', padding: '10px', textAlign: 'center', background: 'rgba(0,0,0,0.2)', borderRadius: '10px' }}>ไม่มีข้อมูลสายงานที่บันทึกไว้ในระบบ</div>
+                                ) : (
+                                    <div style={{ 
+                                        display: 'grid', 
+                                        gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', 
+                                        gap: '0.5rem', 
+                                        maxHeight: '120px', 
+                                        overflowY: 'auto', 
+                                        padding: '6px',
+                                        background: 'rgba(0,0,0,0.3)',
+                                        borderRadius: '10px',
+                                        border: '1px solid rgba(255,255,255,0.06)'
+                                    }} className="custom-scrollbar">
+                                        {allAvailableRoutes.map(({ route, price }) => {
+                                            const isSelected = bulkRoute === route;
+                                            return (
+                                                <button
+                                                    key={route}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setBulkRoute(route);
+                                                        if (price !== undefined && price !== '') {
+                                                            setBulkPrice(price);
+                                                        }
+                                                    }}
+                                                    style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'flex-start',
+                                                        gap: '2px',
+                                                        padding: '8px 12px',
+                                                        borderRadius: '8px',
+                                                        border: isSelected ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.08)',
+                                                        background: isSelected ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.03)',
+                                                        color: isSelected ? '#10b981' : '#e2e8f0',
+                                                        cursor: 'pointer',
+                                                        textAlign: 'left',
+                                                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                                                    }}
+                                                    className="ios-tap"
+                                                >
+                                                    <span style={{ fontSize: '0.8rem', fontWeight: 800 }}>สาย {route}</span>
+                                                    <span style={{ fontSize: '0.68rem', color: isSelected ? '#34d399' : '#94a3b8' }}>
+                                                        {price ? `฿${parseInt(price).toLocaleString()}` : 'ไม่ระบุราคา'}
+                                                    </span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+
                             {/* สายรถ */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                                 <label style={{ fontSize: '0.78rem', fontWeight: '700', color: '#94a3b8' }}>สายรถ (เส้นทางวิ่ง)</label>
@@ -511,6 +578,21 @@ const DataHub = ({
 
             {/* Custom Premium Styles */}
             <style>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 6px;
+                    height: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: rgba(0,0,0,0.1);
+                    border-radius: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: rgba(255,255,255,0.15);
+                    border-radius: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(255,255,255,0.3);
+                }
                 .table-row-hover-dark:hover {
                     background: rgba(255, 255, 255, 0.035)!important;
                 }
