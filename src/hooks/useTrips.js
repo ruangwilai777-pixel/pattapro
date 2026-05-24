@@ -18,7 +18,7 @@ const normalizeTrip = (t) => {
     // basketShare reads from staff_share in DB or basketShare in frontend
     const basketShare = p(t.basketShare) || p(t.basket_share) || p(t.staff_share) || 0;
 
-    const profit = (price + (basket - basketShare)) - fuel - wage - maintenance;
+    const profit = (price + basket) - (fuel + wage + maintenance + basketShare);
 
     // Date normalization
     let dateStr = getLocalDate();

@@ -2,7 +2,7 @@ import React from 'react';
 import { Download, ChevronLeft, ChevronRight, Plus, Edit2, Trash2, ReceiptText, Camera, History, X } from 'lucide-react';
 import SalarySlip from './SalarySlip';
 
-const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExport, onSelectDate, onEditTrip, onDeleteTrip, cnDeductions, setCnDeductions, showSlips = true, onlySlips = false, onBulkUpdateRoutePrice, routePresets, readOnly = false }) => {
+const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExport, onSelectDate, onEditTrip, onDeleteTrip, cnDeductions, setCnDeductions, showSlips = true, onlySlips = false, onBulkUpdateRoutePrice, routePresets }) => {
     const [selectedDriverForSlip, setSelectedDriverForSlip] = React.useState(null);
     const [selectedDriverForHistory, setSelectedDriverForHistory] = React.useState(null);
 
@@ -81,85 +81,23 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
         const dateStr = `${y}-${m}-${d}`;
         const dayTrips = trips.filter(t => t.date === dateStr);
 
-        if (dayTrips.length === 0) {
-            return { route: '-', price: 0, fuel: 0, wage: 0, basket: 0, basketShare: 0, staffShare: 0, maintenance: 0, advance: 0, profit: 0, count: 0, items: [] };
-        }
-
-        const groupedMap = {};
-        dayTrips.forEach(trip => {
-            const name = (trip.driverName || '').trim() || 'ไม่ระบุชื่อ';
-            if (!groupedMap[name]) {
-                groupedMap[name] = [];
-            }
-            groupedMap[name].push(trip);
-        });
-
-        const groupedItems = Object.entries(groupedMap).map(([name, items]) => {
-            const p = (v) => parseFloat(v) || 0;
-            
-            // Merge routes nicely (ignore empty routes or '-')
-            const routes = items.map(t => (t.route || '').trim()).filter(r => r && r !== '-');
-            const uniqueRoutes = [...new Set(routes)];
-            const route = uniqueRoutes.join(', ') || '-';
-            
-            // Price, fuel, wage, etc. sums
-            const price = items.reduce((sum, t) => sum + p(t.price), 0);
-            const fuel = items.reduce((sum, t) => sum + p(t.fuel), 0);
-            const wage = items.reduce((sum, t) => sum + p(t.wage), 0);
-            const maintenance = items.reduce((sum, t) => sum + p(t.maintenance), 0);
-            const basket = items.reduce((sum, t) => sum + p(t.basket), 0);
-            const basketCount = items.reduce((sum, t) => sum + parseInt(t.basketCount || 0), 0);
-            const basketShare = items.reduce((sum, t) => sum + p(t.basketShare), 0);
-            const staffShare = items.reduce((sum, t) => sum + p(t.staffShare), 0);
-            
-            // Recalculate profit using the standard accounting formula
-            const profit = (price + (basket - basketShare)) - fuel - wage - maintenance;
-
-            // Collect bill URLs (take first non-null or combine them)
-            const fuel_bill_url = items.map(t => t.fuel_bill_url).find(u => u) || null;
-            const maintenance_bill_url = items.map(t => t.maintenance_bill_url).find(u => u) || null;
-            const basket_bill_url = items.map(t => t.basket_bill_url).find(u => u) || null;
-
-            return {
-                id: items[0].id,
-                groupedIds: items.map(t => t.id),
-                date: items[0].date,
-                driverName: name,
-                route,
-                price,
-                fuel,
-                wage,
-                maintenance,
-                basket,
-                basketCount,
-                basketShare,
-                staffShare,
-                profit,
-                fuel_bill_url,
-                maintenance_bill_url,
-                basket_bill_url,
-                items
-            };
-        });
-
-        const daySummary = groupedItems.reduce((acc, item) => ({
-            price: acc.price + item.price,
-            fuel: acc.fuel + item.fuel,
-            wage: acc.wage + item.wage,
-            maintenance: acc.maintenance + item.maintenance,
-            basket: acc.basket + item.basket,
-            basketShare: acc.basketShare + item.basketShare,
-            staffShare: acc.staffShare + item.staffShare,
-            profit: acc.profit + item.profit
-        }), { price: 0, fuel: 0, wage: 0, maintenance: 0, basket: 0, basketShare: 0, staffShare: 0, profit: 0 });
+        if (dayTrips.length === 0) return { route: '-', price: 0, fuel: 0, wage: 0, basket: 0, basketShare: 0, staffShare: 0, maintenance: 0, advance: 0, profit: 0, count: 0, items: [] };
 
         return {
-            ...daySummary,
-            advance: daySummary.staffShare, // Backwards compatible duplicate
-            route: groupedItems.map(t => t.route).filter(r => r && r !== '-').join(', ') || '-',
-            driverName: groupedItems.map(t => t.driverName).join(', ') || '-',
-            count: dayTrips.filter(t => (t.route && t.route !== '-') || t.wage > 0 || t.price > 0).length || dayTrips.length,
-            items: groupedItems
+            ...dayTrips.reduce((acc, trip) => ({
+                route: dayTrips.map(t => t.route).join(', '),
+                driverName: dayTrips.map(t => t.driverName).filter(n => n).join(', ') || '-',
+                price: acc.price + trip.price,
+                fuel: acc.fuel + trip.fuel,
+                wage: acc.wage + trip.wage,
+                basket: acc.basket + trip.basket,
+                staffShare: acc.staffShare + trip.staffShare,
+                maintenance: acc.maintenance + trip.maintenance,
+                basketShare: acc.basketShare + trip.basketShare,
+                profit: acc.profit + trip.profit
+            }), { price: 0, fuel: 0, wage: 0, basket: 0, staffShare: 0, maintenance: 0, basketShare: 0, profit: 0 }),
+            count: dayTrips.length,
+            items: dayTrips
         };
     };
 
@@ -183,16 +121,14 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        {!readOnly && (
-                            <button
-                                className="btn btn-outline"
-                                style={{ borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
-                                onClick={() => setIsBulkOpen(true)}
-                            >
-                                <Plus size={18} />
-                                ป้อนสายรถด่วน (Bulk)
-                            </button>
-                        )}
+                        <button
+                            className="btn btn-outline"
+                            style={{ borderColor: 'var(--primary)', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+                            onClick={() => setIsBulkOpen(true)}
+                        >
+                            <Plus size={18} />
+                            ป้อนสายรถด่วน (Bulk)
+                        </button>
                         <button className="btn btn-outline" onClick={onExport}>
                             <Download size={18} />
                             Export รอบนี้
@@ -203,7 +139,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
 
 
             {/* Salary Slips section - Moved to Top */}
-            {showSlips && !readOnly && (
+            {showSlips && (
                 <div style={{ padding: '1.25rem 1.5rem', borderBottom: onlySlips ? 'none' : '1px solid rgba(255,255,255,0.05)', flexShrink: 0, background: 'rgba(255,255,255,0.02)' }}>
                     <h3 style={{ fontSize: '1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <ReceiptText size={18} color="var(--primary)" /> ออกสลิปเงินเดือนพนักงาน
@@ -295,7 +231,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                 <th style={{ width: '7%', padding: '0.5rem', textAlign: 'right' }}>แบ่ง</th>
                                 <th style={{ width: '7%', padding: '0.5rem', textAlign: 'right' }}>เบิก</th>
                                 <th style={{ width: '7%', padding: '0.5rem', textAlign: 'right' }}>กำไร</th>
-                                {!readOnly && <th style={{ width: '7%', padding: '0.5rem', textAlign: 'center' }}>จัดการ</th>}
+                                <th style={{ width: '7%', padding: '0.5rem', textAlign: 'center' }}>จัดการ</th>
                             </tr>
                         </thead>
                         <tbody style={{ fontSize: '0.8rem' }}>
@@ -308,10 +244,10 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                     return [(
                                         <tr
                                             key={`empty-${dateStr}`}
-                                            onClick={readOnly ? null : () => onSelectDate(dateStr)}
+                                            onClick={() => onSelectDate(dateStr)}
                                             className="clickable-row"
                                             style={{
-                                                cursor: readOnly ? 'default' : 'pointer',
+                                                cursor: 'pointer',
                                                 background: isToday ? 'rgba(99, 102, 241, 0.1)' : 'transparent'
                                             }}
                                         >
@@ -320,8 +256,8 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                                     {date.toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
                                                 </span>
                                             </td>
-                                            <td colSpan={10} style={{ textAlign: 'center', color: 'var(--text-dim)', opacity: 0.3, fontSize: '0.7rem' }}>{readOnly ? 'ไม่มีรายการ' : 'ไม่มีรายการ (คลิกเพื่อเพิ่ม)'}</td>
-                                            {!readOnly && <td></td>}
+                                            <td colSpan={10} style={{ textAlign: 'center', color: 'var(--text-dim)', opacity: 0.3, fontSize: '0.7rem' }}>ไม่มีรายการ (คลิกเพื่อเพิ่ม)</td>
+                                            <td></td>
                                         </tr>
                                     )];
                                 }
@@ -392,7 +328,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                         <td style={{ padding: '0.5rem', textAlign: 'right', color: 'var(--danger)' }}>
                                             {trip.basketShare > 0 ? trip.basketShare.toLocaleString() : '-'}
                                         </td>
-                                        <td style={{ padding: '0.5rem', textAlign: 'right', color: 'var(--text-main)' }}>
+                                        <td style={{ padding: '0.5rem', textAlign: 'right', color: 'var(--warning)' }}>
                                             {trip.staffShare > 0 ? trip.staffShare.toLocaleString() : '-'}
                                         </td>
                                         <td style={{ padding: '0.5rem', textAlign: 'right' }}>
@@ -402,35 +338,16 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                                 </span>
                                             ) : '-'}
                                         </td>
-                                        {!readOnly && (
-                                            <td style={{ padding: '0.5rem', textAlign: 'center' }}>
-                                                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                                                    <button className="btn-icon" onClick={() => onEditTrip(trip)} style={{ padding: '4px' }} title="แก้ไข">
-                                                        <Edit2 size={16} color="var(--primary)" />
-                                                    </button>
-                                                    <button 
-                                                        className="btn-icon" 
-                                                        onClick={async () => {
-                                                            if (trip.groupedIds && trip.groupedIds.length > 1) {
-                                                                if (window.confirm(`มีข้อมูลวิ่งงานและข้อมูลเบิกเงินที่ถูกรวมกันอยู่ในแถวนี้ คุณต้องการลบข้อมูลทั้งหมดที่เกี่ยวข้องรวม ${trip.groupedIds.length} รายการออกพร้อมกันหรือไม่?`)) {
-                                                                    for (const gId of trip.groupedIds) {
-                                                                        await onDeleteTrip(gId);
-                                                                    }
-                                                                }
-                                                            } else {
-                                                                if (window.confirm('คุณแน่ใจว่าต้องการลบรายการนี้หรือไม่?')) {
-                                                                    await onDeleteTrip(trip.id);
-                                                                }
-                                                            }
-                                                        }} 
-                                                        style={{ padding: '4px' }} 
-                                                        title="ลบ"
-                                                    >
-                                                        <Trash2 size={16} color="var(--danger)" />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        )}
+                                        <td style={{ padding: '0.5rem', textAlign: 'center' }}>
+                                            <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                                                <button className="btn-icon" onClick={() => onEditTrip(trip)} style={{ padding: '4px' }} title="แก้ไข">
+                                                    <Edit2 size={16} color="var(--primary)" />
+                                                </button>
+                                                <button className="btn-icon" onClick={() => onDeleteTrip(trip.id)} style={{ padding: '4px' }} title="ลบ">
+                                                    <Trash2 size={16} color="var(--danger)" />
+                                                </button>
+                                            </div>
+                                        </td>
                                     </tr>
                                 ));
                             })}
@@ -486,7 +403,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                             <div style={{ fontSize: '0.6rem', opacity: 0.6, marginBottom: '-2px' }}>แบ่ง</div>
                                             ฿{totals.basketShare.toLocaleString()}
                                         </td>
-                                        <td style={{ ...totalCellStyles, color: 'white' }}>
+                                        <td style={{ ...totalCellStyles, color: 'var(--warning)' }}>
                                             <div style={{ fontSize: '0.6rem', opacity: 0.6, marginBottom: '-2px' }}>เบิก</div>
                                             ฿{totals.staffShare.toLocaleString()}
                                         </td>
@@ -496,7 +413,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                                 ฿{Math.round(totals.profit).toLocaleString()}
                                             </div>
                                         </td>
-                                         {!readOnly && <td></td>}
+                                        <td></td>
                                     </tr>
                                 );
                             })()}
