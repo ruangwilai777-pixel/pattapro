@@ -54,9 +54,75 @@ const DataHub = ({
         setBulkYear(currentYear);
     }, [currentMonth, currentYear]);
 
-    /* ── Chronological Trips Sorting ── */
+    /* ── Chronological Trips Sorting & Row Consolidation (Merged by Date + Driver) ── */
     const sortedTrips = useMemo(() => {
-        return [...trips].sort((a, b) => new Date(a.date) - new Date(b.date));
+        const groups = {};
+        trips.forEach(t => {
+            const dateStr = t.date || '';
+            const driver = (t.driverName || t.driver_name || 'ไม่ระบุชื่อ').trim();
+            const key = `${dateStr}_${driver}`;
+            if (!groups[key]) {
+                groups[key] = {
+                    id: t.id,
+                    ids: [t.id],
+                    date: dateStr,
+                    driverName: driver,
+                    routes: [],
+                    price: 0,
+                    fuel: 0,
+                    wage: 0,
+                    maintenance: 0,
+                    advance: 0,
+                    basket: 0,
+                    basketCount: 0,
+                    basketShare: 0,
+                    staffShare: 0,
+                    profit: 0,
+                    fuel_bill_urls: [],
+                    maintenance_bill_urls: [],
+                    basket_bill_urls: [],
+                    originalTrips: [t]
+                };
+            } else {
+                groups[key].ids.push(t.id);
+                groups[key].originalTrips.push(t);
+            }
+
+            const g = groups[key];
+            if (t.route && t.route.trim()) {
+                g.routes.push(t.route.trim());
+            }
+            g.price += (t.price || 0);
+            g.fuel += (t.fuel || 0);
+            g.wage += (t.wage || 0);
+            g.maintenance += (t.maintenance || 0);
+            g.advance += (t.advance || t.staffShare || 0);
+            g.basket += (t.basket || 0);
+            g.basketCount += (t.basketCount || 0);
+            g.basketShare += (t.basketShare || 0);
+            g.staffShare += (t.staffShare || 0);
+
+            const fuelUrl = t.fuel_bill_url || t.fuel_url || t.fuelUrl;
+            if (fuelUrl) g.fuel_bill_urls.push(fuelUrl);
+            
+            const maintUrl = t.maintenance_bill_url || t.maintenance_url || t.maintenanceUrl;
+            if (maintUrl) g.maintenance_bill_urls.push(maintUrl);
+
+            const basketUrl = t.basket_bill_url || t.basket_url || t.basketUrl;
+            if (basketUrl) g.basket_bill_urls.push(basketUrl);
+        });
+
+        const merged = Object.values(groups).map(g => {
+            const uniqueRoutes = Array.from(new Set(g.routes)).filter(Boolean);
+            g.route = uniqueRoutes.length > 0 ? uniqueRoutes.join(', ') : '-';
+            g.profit = (g.price + g.basket) - (g.fuel + g.wage + g.maintenance + g.basketShare);
+            g.fuel_bill_url = g.fuel_bill_urls[0] || null;
+            g.maintenance_bill_url = g.maintenance_bill_urls[0] || null;
+            g.basket_bill_url = g.basket_bill_urls[0] || null;
+            return g;
+        });
+
+        return merged.sort((a, b) => new Date(a.date) - new Date(b.date));
     }, [trips]);
 
     /* ── Route Performance stats ── */
@@ -165,80 +231,6 @@ const DataHub = ({
                     >
                         <Download size={14} /> Export CSV
                     </button>
-                </div>
-            </div>
-
-            {/* ════════════════════════════════════════
-                SECTION 1: สถิติรวมทั้งหมด (KPI STRIP)
-            ════════════════════════════════════════ */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'white', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <BarChart2 size={18} color="#38bdf8" /> 📊 สรุปผลประกอบการและสถิติรวมรอบบัญชีนี้
-                </h3>
-                
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem' }}>
-                    <KpiCard icon={TrendingUp} label="รายได้รวมทั้งหมด"  value={`฿${fmt(totalRevenue)}`} color="#38bdf8" sub={`${totalTrips} เที่ยววิ่ง`} />
-                    <KpiCard icon={Award}      label="กำไรสุทธิรวม"      value={`฿${fmt(totalProfit)}`}  color={totalProfit>=0?'#22c55e':'#f43f5e'} sub={totalProfit>=0?'กำไรบวก':'ขาดทุนสะสม'} />
-                    <KpiCard icon={Fuel}       label="ค่าน้ำมันสะสม"      value={`฿${fmt(totalFuel)}`}    color="#f87171" sub={`เฉลี่ย ฿${totalTrips>0?fmt(totalFuel/totalTrips):0} / เที่ยว`} />
-                    <KpiCard icon={Users}      label="ค่าจ้างพนักงานสะสม"  value={`฿${fmt(totalWage)}`}    color="#fb923c" sub={`เฉลี่ย ฿${totalTrips>0?fmt(totalWage/totalTrips):0} / เที่ยว`} />
-                    <KpiCard icon={Wrench}     label="ค่าซ่อมบำรุงสะสม"    value={`฿${fmt(totalMaintenance)}`} color="#e879f9" />
-                    <KpiCard icon={TrendingUp} label="ยอดเบิกคนขับสะสม"   value={`฿${fmt(totalStaffAdvance)}`} color="#94a3b8" />
-                    <KpiCard icon={Award}      label="ส่วนแบ่งตะกร้าสะสม" value={`฿${fmt(totalBasketShare)}`} color="#fbbf24" />
-                    <KpiCard icon={Users}      label="แชร์ลูกน้องสะสม"    value={`฿${fmt(stats.totalStaffShare || 0)}`} color="#a78bfa" />
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginTop: '0.25rem' }}>
-                    {/* Cost ratio breakdown */}
-                    <div className="glass-card" style={{ background: 'rgba(30, 41, 59, 0.3)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 20, padding: '1.25rem', backdropFilter: 'blur(10px)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                <Activity size={14} color="#818cf8" />
-                                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'white' }}>สัดส่วนต้นทุนต่อรายได้รวม</span>
-                            </div>
-                            <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700 }}>คำนวณจากรายได้ ฿{fmt(totalRevenue)}</span>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                            {[
-                                { label: 'ค่าน้ำมันรถ',      val: totalFuel,         color: '#f87171' },
-                                { label: 'ค่าจ้างพนักงาน',   val: totalWage,         color: '#fb923c' },
-                                { label: 'ค่าซ่อมบำรุงรถ',   val: totalMaintenance,  color: '#e879f9' },
-                                { label: 'ส่วนแบ่งตะกร้า',   val: totalBasketShare,  color: '#fbbf24' },
-                                { label: 'เบิกจ่ายล่วงหน้า',   val: totalStaffAdvance, color: '#94a3b8' }
-                            ].map(({ label, val, color }) => {
-                                const pct = totalRevenue > 0 ? Math.min((val/totalRevenue)*100, 100) : 0;
-                                return (
-                                    <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem' }}>
-                                            <span style={{ color: '#94a3b8', fontWeight: 600 }}>{label}</span>
-                                            <span style={{ fontWeight: 800, color }}>฿{fmt(val)} ({pct.toFixed(1)}%)</span>
-                                        </div>
-                                        <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.03)', overflow: 'hidden' }}>
-                                            <div style={{ height: '100%', width: `${pct}%`, borderRadius: 2, background: color }} />
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Profit margin efficiency */}
-                    <div className="glass-card" style={{ background: 'rgba(30, 41, 59, 0.3)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 20, padding: '1.25rem', backdropFilter: 'blur(10px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                <Award size={15} color="#22c55e" />
-                                <span style={{ fontSize: '0.8rem', color: '#22c55e', fontWeight: 800 }}>อัตรากำไรสุทธิ (Profit Margin)</span>
-                            </div>
-                            <span style={{ fontSize: '0.9rem', fontWeight: 900, color: '#22c55e' }}>
-                                {totalRevenue > 0 ? ((totalProfit/totalRevenue)*100).toFixed(1) : '0.0'}%
-                            </span>
-                        </div>
-                        <div style={{ height: 8, borderRadius: 8, background: 'rgba(255,255,255,0.03)', overflow: 'hidden', marginBottom: '1rem' }}>
-                            <div style={{ height: '100%', width: `${totalRevenue>0?Math.max(0, Math.min((totalProfit/totalRevenue)*100,100)):0}%`, borderRadius: 8, background: 'linear-gradient(90deg, #10b981, #22c55e)', boxShadow: '0 0 12px rgba(34,197,94,0.3)' }} />
-                        </div>
-                        <p style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600, margin: 0, lineHeight: 1.4 }}>
-                            สถิตินี้แสดงความสามารถในการทำกำไรหลังจากหักต้นทุนค่าน้ำมัน ค่าใช้จ่ายพนักงาน ค่าซ่อมบำรุง และส่วนแบ่งคืนทั้งหมดแล้ว ค่าที่เป็นบวกสะท้อนถึงการบริหารงานที่มีเสถียรภาพทางการเงิน
-                        </p>
-                    </div>
                 </div>
             </div>
 
@@ -404,7 +396,7 @@ const DataHub = ({
                                                     <button onClick={() => onEditTrip(trip)} className="ios-tap" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: '#38bdf8', width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} title="แก้ไข">
                                                         <Edit2 size={13} />
                                                     </button>
-                                                    <button onClick={() => { if(window.confirm('ยืนยันที่จะลบข้อมูลเที่ยววิ่งนี้?')) onDeleteTrip(trip.id); }} className="ios-tap" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: '#f43f5e', width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} title="ลบ">
+                                                    <button onClick={() => { if(window.confirm('ยืนยันที่จะลบข้อมูลรายการของวันนี้ทั้งหมดสำหรับคนขับคนนี้?')) { trip.ids.forEach(id => onDeleteTrip(id)); } }} className="ios-tap" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: '#f43f5e', width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} title="ลบ">
                                                         <Trash2 size={13} />
                                                     </button>
                                                 </div>
