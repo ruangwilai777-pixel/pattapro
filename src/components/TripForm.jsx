@@ -246,7 +246,9 @@ const TripForm = ({ onAdd, onUpdate, uploadFile, routePresets, fetchPresets, ext
                 {/* Column Left */}
                 <div className="grid-column">
                     <div className="input-field-premium">
-                        <label><User size={14} /> ชื่อคนขับ</label>
+                        <div className="label-row">
+                            <label><User size={14} /> ชื่อคนขับ</label>
+                        </div>
                         <input
                             type="text"
                             className="input-premium-compact"
@@ -259,7 +261,9 @@ const TripForm = ({ onAdd, onUpdate, uploadFile, routePresets, fetchPresets, ext
                         />
                     </div>
                     <div className="input-field-premium">
-                        <label><Banknote size={14} /> ราคาค่าเที่ยว (บาท)</label>
+                        <div className="label-row">
+                            <label><Banknote size={14} /> ราคาค่าเที่ยว (บาท)</label>
+                        </div>
                         <input
                             type="number"
                             className="input-premium-compact"
@@ -357,7 +361,9 @@ const TripForm = ({ onAdd, onUpdate, uploadFile, routePresets, fetchPresets, ext
                 {/* Column Right */}
                 <div className="grid-column">
                     <div className="input-field-premium">
-                        <label><MapPin size={14} /> สายงาน (เส้นทาง)</label>
+                        <div className="label-row">
+                            <label><MapPin size={14} /> สายงาน (เส้นทาง)</label>
+                        </div>
                         <input
                             type="text"
                             list="route-options"
@@ -373,7 +379,9 @@ const TripForm = ({ onAdd, onUpdate, uploadFile, routePresets, fetchPresets, ext
                         </datalist>
                     </div>
                     <div className="input-field-premium">
-                        <label><Banknote size={14} /> ค่าจ้าง (บาท)</label>
+                        <div className="label-row">
+                            <label><Banknote size={14} /> ค่าจ้าง (บาท)</label>
+                        </div>
                         <input
                             type="number"
                             className="input-premium-compact"
@@ -383,7 +391,9 @@ const TripForm = ({ onAdd, onUpdate, uploadFile, routePresets, fetchPresets, ext
                         />
                     </div>
                     <div className="input-field-premium">
-                        <label><ShoppingBasket size={14} /> จำนวนตะกร้า (ใบ)</label>
+                        <div className="label-row">
+                            <label><ShoppingBasket size={14} /> จำนวนตะกร้า (ใบ)</label>
+                        </div>
                         <input
                             type="number"
                             className="input-premium-compact"
@@ -393,7 +403,9 @@ const TripForm = ({ onAdd, onUpdate, uploadFile, routePresets, fetchPresets, ext
                         />
                     </div>
                     <div className="input-field-premium">
-                        <label><Wallet size={14} /> ยอดเบิกสะสม</label>
+                        <div className="label-row">
+                            <label><Wallet size={14} /> ยอดเบิกสะสม</label>
+                        </div>
                         <input
                             type="number"
                             className="input-premium-compact"
@@ -403,7 +415,9 @@ const TripForm = ({ onAdd, onUpdate, uploadFile, routePresets, fetchPresets, ext
                         />
                     </div>
                     <div className="input-field-premium">
-                        <label><Sparkles size={14} /> ส่วนแบ่งตะกร้า (บาท)</label>
+                        <div className="label-row">
+                            <label><Sparkles size={14} /> ส่วนแบ่งตะกร้า (บาท)</label>
+                        </div>
                         <input
                             type="number"
                             className="input-premium-compact"
@@ -438,7 +452,7 @@ const TripForm = ({ onAdd, onUpdate, uploadFile, routePresets, fetchPresets, ext
                 .date-nav-btn:hover { background: rgba(129, 140, 248, 0.2); color: var(--primary); }
                 .date-input-minimal { background: transparent; border: none; padding: 0; color: var(--text-main); font-weight: 700; font-family: inherit; outline: none; font-size: 11.5px; cursor: pointer; text-align: right; }
                 
-                .admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+                .admin-form-grid { display: grid; grid-template-columns: 1fr; gap: 0.5rem; }
                 .grid-column { display: flex; flex-direction: column; gap: 0.35rem; }
                 
                 .input-field-premium { display: flex; flex-direction: column; gap: 1px; position: relative; }
