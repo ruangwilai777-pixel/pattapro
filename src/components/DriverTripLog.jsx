@@ -1,6 +1,7 @@
 import React from 'react';
 
 const DriverTripLog = ({ trips, currentMonth, currentYear, driverName, isDriverCopy = false }) => {
+    const [zoom, setZoom] = React.useState(1.0);
     const monthNames = [
         'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
         'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
@@ -132,21 +133,41 @@ const DriverTripLog = ({ trips, currentMonth, currentYear, driverName, isDriverC
     const currMonthIdx = currentMonth;
 
     return (
-        <div className="trip-log-card" style={{
-            width: '100%',
-            maxWidth: '1200px',
-            margin: '0 auto',
-            background: 'white',
-            padding: '1.5rem',
-            borderRadius: '1.25rem',
-            color: 'black',
-            fontFamily: "'Sarabun', sans-serif",
-            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
-            border: '1.5px solid #e2e8f0',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'visible'
-        }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', gap: '10px' }}>
+            {/* Interactive Zoom Controls */}
+            <div className="zoom-controls no-print" style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '12px',
+                background: 'rgba(255, 255, 255, 0.08)',
+                padding: '8px 16px',
+                borderRadius: '16px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                marginBottom: '10px'
+            }}>
+                <button type="button" onClick={() => setZoom(Math.max(0.6, zoom - 0.1))} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>-</button>
+                <span style={{ fontSize: '12px', fontWeight: '800', color: '#e2e8f0', minWidth: '70px', textAlign: 'center' }}>ซูม: {Math.round(zoom * 100)}%</span>
+                <button type="button" onClick={() => setZoom(Math.min(1.8, zoom + 0.1))} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                <button type="button" onClick={() => setZoom(1.0)} style={{ background: 'transparent', border: 'none', color: '#818cf8', fontSize: '11px', fontWeight: '800', cursor: 'pointer', marginLeft: '6px' }}>รีเซ็ต</button>
+            </div>
+            
+            <div className="trip-log-card" style={{
+                zoom: zoom,
+                width: '100%',
+                maxWidth: '1200px',
+                margin: '0 auto',
+                background: 'white',
+                padding: '1.5rem',
+                borderRadius: '1.25rem',
+                color: 'black',
+                fontFamily: "'Sarabun', sans-serif",
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
+                border: '1.5px solid #e2e8f0',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'visible'
+            }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', paddingBottom: '12px', borderBottom: '2px solid #f1f5f9' }}>
                 <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '800', background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     🗓️ ตารางลงงานรายวัน: {driverName}
@@ -239,6 +260,7 @@ const DriverTripLog = ({ trips, currentMonth, currentYear, driverName, isDriverC
                     button { display: none !important; }
                 }
             `}} />
+        </div>
         </div>
     );
 };

@@ -9,6 +9,7 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
     const slipRef = React.useRef(null);
     const [isDownloading, setIsDownloading] = React.useState(false);
     const [capturedImg, setCapturedImg] = React.useState(null);
+    const [zoom, setZoom] = React.useState(1.0);
 
     // Safety Parser
     const p = (val) => parseFloat(val) || 0;
@@ -65,8 +66,26 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
 
     const modalContent = (
         <div className="modal-overlay fade-in">
-            <div className="slip-window">
-                <div ref={slipRef} className="glass-card slip-card-premium fade-in-up">
+            <div className="slip-window" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {/* Interactive Zoom Controls */}
+                <div className="zoom-controls no-print" style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '12px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    padding: '8px 16px',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    alignSelf: 'center',
+                    marginBottom: '10px'
+                }}>
+                    <button type="button" onClick={() => setZoom(Math.max(0.6, zoom - 0.1))} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>-</button>
+                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#e2e8f0', minWidth: '70px', textAlign: 'center' }}>ซูม: {Math.round(zoom * 100)}%</span>
+                    <button type="button" onClick={() => setZoom(Math.min(1.8, zoom + 0.1))} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                    <button type="button" onClick={() => setZoom(1.0)} style={{ background: 'transparent', border: 'none', color: '#818cf8', fontSize: '11px', fontWeight: '800', cursor: 'pointer', marginLeft: '6px' }}>รีเซ็ต</button>
+                </div>
+                <div ref={slipRef} className="glass-card slip-card-premium fade-in-up" style={{ zoom: zoom }}>
                     {/* Header */}
                     <div className="slip-header-premium">
                         <div className="header-brand">
@@ -208,6 +227,7 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
                     z-index: 9999;
                     padding: 2rem 1rem;
                     overflow-y: auto;
+                    overflow-x: auto;
                 }
                 .slip-window { width: 100%; max-width: 420px; }
                 .slip-card-premium { 

@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Printer, ShoppingBasket, Truck, ReceiptText } from 'lucide-react';
 
 const BillingSummary = ({ trips, currentMonth, currentYear, driverName = "นางสาว ภัทธา เรืองวิลัย", address = "เลขที่ 246 หมู่ 6 ต.เวียงตาล อ.ห้างฉัตร ลำปาง 52190", isDriverCopy = false, cnDeduction = 0 }) => {
+    const [zoom, setZoom] = React.useState(1.0);
     const monthNames = [
         'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
         'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
@@ -143,13 +144,33 @@ const BillingSummary = ({ trips, currentMonth, currentYear, driverName = "นา
     const grandTotal = isDriverCopy ? (totalAllRevenue + housingAllowance) - (totalAdvance + (parseFloat(cnDeduction) || 0)) : totalAllRevenue;
 
     return (
-        <div className="glass-card fade-in" style={{
-            width: '50%', minWidth: '650px', margin: '1.5rem auto',
-            display: 'flex', flexDirection: 'column', background: '#fff', color: '#000',
-            borderRadius: '1.25rem', border: '1.5px solid #e2e8f0', // Thinner, softer border for premium look
-            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
-            fontFamily: "'Sarabun', sans-serif", overflow: 'hidden'
-        }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', gap: '10px' }}>
+            {/* Interactive Zoom Controls */}
+            <div className="zoom-controls no-print" style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '12px',
+                background: 'rgba(255, 255, 255, 0.08)',
+                padding: '8px 16px',
+                borderRadius: '16px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                marginBottom: '10px'
+            }}>
+                <button type="button" onClick={() => setZoom(Math.max(0.6, zoom - 0.1))} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>-</button>
+                <span style={{ fontSize: '12px', fontWeight: '800', color: '#e2e8f0', minWidth: '70px', textAlign: 'center' }}>ซูม: {Math.round(zoom * 100)}%</span>
+                <button type="button" onClick={() => setZoom(Math.min(1.8, zoom + 0.1))} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
+                <button type="button" onClick={() => setZoom(1.0)} style={{ background: 'transparent', border: 'none', color: '#818cf8', fontSize: '11px', fontWeight: '800', cursor: 'pointer', marginLeft: '6px' }}>รีเซ็ต</button>
+            </div>
+            
+            <div className="glass-card fade-in" style={{
+                zoom: zoom,
+                width: '100%', maxWidth: '800px', margin: '0 auto',
+                display: 'flex', flexDirection: 'column', background: '#fff', color: '#000',
+                borderRadius: '1.25rem', border: '1.5px solid #e2e8f0',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
+                fontFamily: "'Sarabun', sans-serif", overflow: 'hidden'
+            }}>
             <div style={{
                 padding: '1.5rem', display: 'flex', justifyContent: 'space-between',
                 alignItems: 'center', borderBottom: '2px solid #000', background: '#fff'
@@ -324,6 +345,7 @@ const BillingSummary = ({ trips, currentMonth, currentYear, driverName = "นา
                         .btn-icon, .X { display: none !important; }
                     }
                 `}</style>
+        </div>
         </div>
     );
 };
