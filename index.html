@@ -223,65 +223,7 @@
       checkHash();
     })();
   </script>
-  
-  <script>
-    // Custom global touch-pinch gesture zoom for driver overlays (Billing, TripLog, Slip)
-    (function() {
-      var zoomLevel = 1.0;
-      var activeTarget = null;
 
-      function getActiveOverlay() {
-        return document.querySelector('.glass-card, .trip-log-card, .slip-card-premium');
-      }
-
-      function applyZoom(target, level) {
-        if (target) {
-          target.style.zoom = level;
-        }
-      }
-
-      var touchStartDist = 0;
-      var initialScale = 1.0;
-
-      document.addEventListener('touchstart', function(e) {
-        if (e.touches.length === 2) {
-          var target = getActiveOverlay();
-          if (target) {
-            activeTarget = target;
-            var t1 = e.touches[0];
-            var t2 = e.touches[1];
-            touchStartDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-            initialScale = zoomLevel;
-          }
-        }
-      }, { passive: true });
-
-      document.addEventListener('touchmove', function(e) {
-        if (e.touches.length === 2 && activeTarget && touchStartDist > 0) {
-          var t1 = e.touches[0];
-          var t2 = e.touches[1];
-          var dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-          var factor = dist / touchStartDist;
-          zoomLevel = Math.min(1.8, Math.max(0.6, initialScale * factor));
-          applyZoom(activeTarget, zoomLevel);
-        }
-      }, { passive: true });
-
-      document.addEventListener('touchend', function(e) {
-        if (e.touches.length < 2) {
-          touchStartDist = 0;
-          activeTarget = null;
-        }
-      });
-
-      // Reset zoomLevel when overlay is closed
-      setInterval(function() {
-        if (!getActiveOverlay()) {
-          zoomLevel = 1.0;
-        }
-      }, 1000);
-    })();
-  </script>
 </body>
 
 </html>

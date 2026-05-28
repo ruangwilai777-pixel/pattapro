@@ -143,59 +143,10 @@ const BillingSummary = ({ trips, currentMonth, currentYear, driverName = "นา
     const totalAdvance = isDriverCopy ? trips.reduce((sum, t) => sum + (parseFloat(t.staffShare) || 0), 0) : 0;
     const grandTotal = isDriverCopy ? (totalAllRevenue + housingAllowance) - (totalAdvance + (parseFloat(cnDeduction) || 0)) : totalAllRevenue;
 
-    const touchStartRef = React.useRef({ dist: 0, zoom: 1.0 });
 
-    const handleTouchStart = (e) => {
-        if (e.touches.length === 2) {
-            const t1 = e.touches[0];
-            const t2 = e.touches[1];
-            const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-            touchStartRef.current = { dist, zoom };
-        }
-    };
-
-    const handleTouchMove = (e) => {
-        if (e.touches.length === 2 && touchStartRef.current.dist > 0) {
-            const t1 = e.touches[0];
-            const t2 = e.touches[1];
-            const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-            const factor = dist / touchStartRef.current.dist;
-            const newZoom = Math.min(1.8, Math.max(0.6, touchStartRef.current.zoom * factor));
-            setZoom(newZoom);
-        }
-    };
-
-    const handleTouchEnd = () => {
-        touchStartRef.current = { dist: 0, zoom: 1.0 };
-    };
 
     return (
-        <div 
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', gap: '10px' }}
-        >
-            {/* Interactive Zoom Controls */}
-            <div className="zoom-controls no-print" style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '6px',
-                background: 'rgba(255, 255, 255, 0.08)',
-                padding: '8px 16px',
-                borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                marginBottom: '10px'
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <button type="button" onClick={() => setZoom(Math.max(0.6, zoom - 0.1))} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>-</button>
-                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#e2e8f0', minWidth: '70px', textAlign: 'center' }}>ซูม: {Math.round(zoom * 100)}%</span>
-                    <button type="button" onClick={() => setZoom(Math.min(1.8, zoom + 0.1))} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>+</button>
-                    <button type="button" onClick={() => setZoom(1.0)} style={{ background: 'transparent', border: 'none', color: '#818cf8', fontSize: '11px', fontWeight: '800', cursor: 'pointer', marginLeft: '6px' }}>รีเซ็ต</button>
-                </div>
-                <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: '600' }}>💡 กางสองนิ้วเพื่อซูมเข้า-ออกได้</span>
-            </div>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', gap: '10px' }}>
             
             <div className="glass-card fade-in" style={{
                 zoom: zoom,
