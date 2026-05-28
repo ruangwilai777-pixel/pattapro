@@ -211,50 +211,20 @@
 <body>
   <div id="root"></div>
   <script>
-    // Monitor URL hash to inject a floating Switch Button on the old admin page
+    // Direct redirect to the new admin panel if the URL contains admin hash
     (function() {
-      var btn = null;
       function checkHash() {
-        var isOldAdmin = window.location.hash.includes('admin');
-        if (isOldAdmin) {
-          if (!btn) {
-            btn = document.createElement('div');
-            btn.className = 'patta-glow-btn';
-            btn.style.cssText = 'position: fixed; top: 12px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 4px; gap: 4px; display: flex; align-items: center; z-index: 999999; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);';
-            
-            btn.innerHTML = `
-              <div style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; border-radius: 12px; padding: 6px 14px; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35); cursor: default; white-space: nowrap; height: 28px; box-sizing: border-box; line-height: 1;">
-                🟣 กำลังใช้งานเวอร์ชันเก่า
-              </div>
-              <a href="/admin" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.2); color: #34d399; border-radius: 12px; padding: 6px 14px; font-size: 12.5px; font-weight: 800; text-decoration: none; display: flex; align-items: center; gap: 5px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; height: 28px; box-sizing: border-box; line-height: 1;" 
-                 onmouseenter="this.style.background='rgba(16, 185, 129, 0.15)'; this.style.borderColor='rgba(16, 185, 129, 0.4)';" 
-                 onmouseleave="this.style.background='rgba(16, 185, 129, 0.06)'; this.style.borderColor='rgba(16, 185, 129, 0.2)';">
-                🔄 กลับไปเวอร์ชันใหม่
-              </a>
-            `;
-            
-            btn.onmouseenter = function() {
-              btn.style.transform = 'translateX(-50%) translateY(-3px) scale(1.05)';
-              btn.style.boxShadow = '0 12px 36px rgba(0, 0, 0, 0.6)';
-            };
-            btn.onmouseleave = function() {
-              btn.style.transform = 'translateX(-50%)';
-              btn.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
-            };
-            document.body.appendChild(btn);
-          }
-        } else {
-          if (btn) {
-            btn.remove();
-            btn = null;
-          }
+        if (window.location.hash.includes('admin')) {
+          window.location.replace('/admin');
         }
       }
       window.addEventListener('load', checkHash);
       window.addEventListener('hashchange', checkHash);
-      setInterval(checkHash, 1000);
+      checkHash();
     })();
-
+  </script>
+  
+  <script>
     // Custom global touch-pinch gesture zoom and floating controller for driver overlays (Billing, TripLog, Slip)
     (function() {
       var zoomLevel = 1.0;

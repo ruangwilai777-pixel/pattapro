@@ -48,8 +48,7 @@
     <meta name="apple-mobile-web-app-title" content="แอดมินภัทธา" />
     <meta name="theme-color" content="#1e293b" />
     <title>Admin - Patta Transport</title>
-  <script type="module" crossorigin src="/assets/admin-BMNANBuV.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/admin-CmOQ1izG.css">
+    <script type="module" src="/src/main.jsx"></script>
 </head>
 
 <body>
@@ -59,34 +58,6 @@
         if (!window.location.hash.includes('admin')) {
             window.location.hash = '#/admin';
         }
-        
-        // Inject a floating Switch Button on the new admin page to go back to the old version
-        (function() {
-          var btn = document.createElement('div');
-          btn.className = 'patta-glow-btn';
-          btn.style.cssText = 'position: fixed; top: 12px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 4px; gap: 4px; display: flex; align-items: center; z-index: 999999; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);';
-          
-          btn.innerHTML = `
-            <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 12px; padding: 6px 14px; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35); cursor: default; white-space: nowrap; height: 28px; box-sizing: border-box; line-height: 1;">
-              🟢 กำลังใช้งานเวอร์ชันใหม่
-            </div>
-            <a href="/#/admin" style="background: rgba(139, 92, 246, 0.06); border: 1px solid rgba(139, 92, 246, 0.2); color: #a78bfa; border-radius: 12px; padding: 6px 14px; font-size: 12.5px; font-weight: 800; text-decoration: none; display: flex; align-items: center; gap: 5px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; height: 28px; box-sizing: border-box; line-height: 1;" 
-               onmouseenter="this.style.background='rgba(139, 92, 246, 0.15)'; this.style.borderColor='rgba(139, 92, 246, 0.4)';" 
-               onmouseleave="this.style.background='rgba(139, 92, 246, 0.06)'; this.style.borderColor='rgba(139, 92, 246, 0.2)';">
-              🔄 สลับไปเวอร์ชันเก่า
-            </a>
-          `;
-          
-          btn.onmouseenter = function() {
-            btn.style.transform = 'translateX(-50%) translateY(-3px) scale(1.05)';
-            btn.style.boxShadow = '0 12px 36px rgba(0, 0, 0, 0.6)';
-          };
-          btn.onmouseleave = function() {
-            btn.style.transform = 'translateX(-50%)';
-            btn.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
-          };
-          document.body.appendChild(btn);
-        })();
     </script>
 </body>
 
