@@ -6,9 +6,9 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <link rel="icon" type="image/png" href="/assets/icon-192-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5.png?v=2.1" />
-    <link rel="apple-touch-icon" href="/assets/icon-192-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5-cx0PZKN5.png?v=2.1" />
-    <link rel="manifest" href="/assets/admin-CDF2js-Y-CDF2js-Y-CDF2js-Y-CDF2js-Y-CDF2js-Y-CDF2js-Y-CDF2js-Y-CDF2js-Y-CDF2js-Y-CDF2js-Y-CDF2js-Y.webmanifest?v=6.0" />
+    <link rel="icon" type="image/png" href="/assets/icon-192-cx0PZKN5-cx0PZKN5.png?v=2.1" />
+    <link rel="apple-touch-icon" href="/assets/icon-192-cx0PZKN5-cx0PZKN5.png?v=2.1" />
+    <link rel="manifest" href="/assets/admin-CDF2js-Y-CDF2js-Y.webmanifest?v=6.0" />
     <style>
         @media (max-width: 1200px) {
 
@@ -27,8 +27,8 @@
     <meta name="apple-mobile-web-app-title" content="แอดมินภัทธา" />
     <meta name="theme-color" content="#1e293b" />
     <title>Admin - Patta Transport</title>
-  <script type="module" crossorigin src="/assets/admin-CTO4w7bO.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/admin-BxTMuaix.css">
+  <script type="module" crossorigin src="/assets/admin-DEVZOy1-.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/admin-BsybPqgB.css">
 </head>
 
 <body>
@@ -37,6 +37,19 @@
         // Force redirect to admin hash if not already there
         if (!window.location.hash.includes('admin')) {
             window.location.hash = '#/admin';
+        }
+
+        // Programmatically unregister service workers to prevent aggressive PWA caching in the admin panel
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                if (registrations.length > 0) {
+                    for (let registration of registrations) {
+                        registration.unregister();
+                    }
+                    console.log("Service workers unregistered. Reloading to clear cache...");
+                    window.location.reload();
+                }
+            });
         }
     </script>
 </body>

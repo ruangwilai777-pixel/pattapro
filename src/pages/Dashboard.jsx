@@ -9,10 +9,11 @@ import FleetDashboard from '../components/FleetDashboard';
 import BillingSummary from '../components/BillingSummary';
 import DriverTripLog from '../components/DriverTripLog';
 import DataHub from '../components/DataHub';
+import Settings from '../components/Settings';
 import { logoBase64 } from '../assets/logoBase64';
 
 import {
-    LayoutDashboard, TableProperties, Users, Plus,
+    LayoutDashboard, TableProperties, Users, Settings as SettingsIcon, Plus,
     ChevronLeft, ChevronRight, Download
 } from 'lucide-react';
 
@@ -23,6 +24,7 @@ const TABS = [
     { id: 'overview', label: 'ภาพรวมระบบ',   icon: LayoutDashboard },
     { id: 'table',    label: 'ตารางงาน',       icon: TableProperties },
     { id: 'summary',  label: 'สรุปยอดคนขับ',  icon: Users },
+    { id: 'settings', label: 'การตั้งค่า',     icon: SettingsIcon },
 ];
 
 const months = [
@@ -36,9 +38,10 @@ const Dashboard = () => {
         currentMonth, setCurrentMonth,
         currentYear, setCurrentYear,
         routePresets, cnDeductions, setCnDeductions,
-        fetchPresets, fetchTrips,
+        saveRoutePreset, deletePreset, fetchPresets, fetchTrips,
         isSupabaseReady, currentMonthTripsEnriched, uploadFile,
-        bulkUpdateRoutePrice
+        bulkUpdateRoutePrice,
+        basketTiers, saveBasketTier, deleteBasketTier, checkAndCleanupOldImages
     } = useTrips();
 
     React.useEffect(() => {
@@ -280,6 +283,25 @@ const Dashboard = () => {
                         </div>
                     ))}
                 </div>
+            )}
+
+            {/* ══════════════════════════════════════
+                TAB: การตั้งค่า
+            ══════════════════════════════════════ */}
+            {activeTab === 'settings' && (
+                <Settings
+                    routePresets={routePresets}
+                    saveRoutePreset={saveRoutePreset}
+                    deletePreset={deletePreset}
+                    fetchPresets={fetchPresets}
+                    currentMonth={currentMonth}
+                    currentYear={currentYear}
+                    basketTiers={basketTiers}
+                    saveBasketTier={saveBasketTier}
+                    deleteBasketTier={deleteBasketTier}
+                    checkAndCleanupOldImages={checkAndCleanupOldImages}
+                    trips={trips}
+                />
             )}
 
             {/* ══════════════════════════════════════

@@ -60,6 +60,7 @@ export const useTrips = () => {
     const [trips, setTrips] = useState([]);
     const [routePresets, setRoutePresets] = useState({});
     const [cnDeductions, setCnDeductions] = useState({});
+    const [basketTiers, setBasketTiers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     // Initial Month/Year logic: If day >= 20, it belongs to the NEXT billing month
@@ -127,8 +128,7 @@ export const useTrips = () => {
         if (!isSupabaseReady) return;
         const suffixes = [
             `_${month + 1}_${year}`,
-            `_${month + 1}_${String(year).slice(-2)}`,
-            ''
+            `_${month + 1}_${String(year).slice(-2)}`
         ];
 
         let finalPresets = {};
@@ -136,18 +136,25 @@ export const useTrips = () => {
         for (const suffix of suffixes) {
             try {
                 const query = supabase.from('route_presets').select('*');
-                const { data, error } = await query.ilike('route_name', `%${suffix}`);
+                const { data, error } = await query.ilike('route', `%${suffix}`);
 
                 if (error) {
-                    if (error.code === '42703' || error.status === 400) {
-                        console.warn(`Column "route_name" might be missing in route_presets.`);
-                    } else {
-                        console.warn(`Supabase error for suffix "${suffix}":`, error.message);
+                    const queryFallback = supabase.from('route_presets').select('*');
+                    const { data: dataF, error: errorF } = await queryFallback.ilike('route_name', `%${suffix}`);
+                    if (errorF) {
+                        console.warn(`Preset fetch error:`, errorF.message);
+                        continue;
                     }
-                    continue;
-                }
-
-                if (data && data.length > 0) {
+                    if (dataF && dataF.length > 0) {
+                        dataF.forEach(p => {
+                            const rName = p.route_name || p.name || p.route || 'Unknown';
+                            const cleanName = rName.replace(suffix, '').trim();
+                            if (!finalPresets[cleanName]) {
+                                finalPresets[cleanName] = { price: p.price, wage: p.wage };
+                            }
+                        });
+                    }
+                } else if (data && data.length > 0) {
                     data.forEach(p => {
                         const rName = p.route_name || p.name || p.route || 'Unknown';
                         const cleanName = rName.replace(suffix, '').trim();
@@ -184,6 +191,83 @@ export const useTrips = () => {
             console.error("Error fetching CN deductions (Non-critical):", error);
         }
     }, [isSupabaseReady]);
+
+    const fetchBasketTiers = useCallback(async () => {
+        if (!isSupabaseReady) return;
+        try {
+            const { data, error } = await supabase
+                .from('basket_tiers')
+                .select('*')
+                .order('min_count', { ascending: true });
+            if (error) throw error;
+            if (data) setBasketTiers(data);
+        } catch (err) {
+            console.error('Fetch basket tiers error:', err);
+        }
+    }, [isSupabaseReady]);
+
+    const saveBasketTier = async (tier) => {
+        if (!isSupabaseReady) return { success: false };
+        try {
+            const { error } = await supabase.from('basket_tiers').upsert(tier);
+            if (error) throw error;
+            await fetchBasketTiers();
+            return { success: true };
+        } catch (err) {
+            console.error('Save basket tier error:', err);
+            return { success: false, error: err };
+        }
+    };
+
+    const deleteBasketTier = async (id) => {
+        if (!isSupabaseReady) return { success: false };
+        try {
+            const { error } = await supabase.from('basket_tiers').delete().eq('id', id);
+            if (error) throw error;
+            setBasketTiers(prev => prev.filter(t => t.id !== id));
+            return { success: true };
+        } catch (err) {
+            console.error('Delete basket tier error:', err);
+            return { success: false };
+        }
+    };
+
+    const checkAndCleanupOldImages = async (force = false) => {
+        if (!isSupabaseReady) return { success: false };
+        try {
+            const now = new Date();
+            const twoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, now.getDate());
+            const limitStr = `${twoMonthsAgo.getFullYear()}-${String(twoMonthsAgo.getMonth() + 1).padStart(2, '0')}-${String(twoMonthsAgo.getDate()).padStart(2, '0')}`;
+
+            const { data, error } = await supabase
+                .from('trips')
+                .select('id, date, fuel_bill_url, maintenance_bill_url, basket_bill_url')
+                .lt('date', limitStr);
+
+            if (error) throw error;
+
+            const targets = (data || []).filter(t => t.fuel_bill_url || t.maintenance_bill_url || t.basket_bill_url);
+            if (targets.length === 0) return { success: true, count: 0 };
+
+            const targetIds = targets.map(t => t.id);
+
+            const { error: updateError } = await supabase
+                .from('trips')
+                .update({
+                    fuel_bill_url: null,
+                    maintenance_bill_url: null,
+                    basket_bill_url: null
+                })
+                .in('id', targetIds);
+
+            if (updateError) throw updateError;
+            await fetchTrips();
+            return { success: true, count: targets.length };
+        } catch (err) {
+            console.error("Image cleanup failed:", err);
+            return { success: false, error: err };
+        }
+    };
 
     const calculateStats = useCallback((tripsData, cnMap = {}) => {
         const baseStats = tripsData.reduce((acc, t) => {
@@ -249,8 +333,9 @@ export const useTrips = () => {
         if (isSupabaseReady) {
             fetchPresets(currentMonth, currentYear);
             fetchCnDeductions();
+            fetchBasketTiers();
         }
-    }, [currentMonth, currentYear, isSupabaseReady, fetchPresets, fetchCnDeductions]);
+    }, [currentMonth, currentYear, isSupabaseReady, fetchPresets, fetchCnDeductions, fetchBasketTiers]);
 
 
     const saveRoutePreset = async (route, price, wage, targetMonth, targetYear) => {
@@ -261,11 +346,21 @@ export const useTrips = () => {
         const suffix = `_${m + 1}_${y}`;
         const routeNameWithSuffix = `${route.trim()}${suffix}`;
 
-        const { error } = await supabase.from('route_presets').upsert({
-            route_name: routeNameWithSuffix,
+        let { error } = await supabase.from('route_presets').upsert({
+            route: routeNameWithSuffix,
             price: parseFloat(price),
             wage: parseFloat(wage)
-        }, { onConflict: 'route_name' });
+        }, { onConflict: 'route' });
+
+        if (error) {
+            console.warn("Upsert with 'route' failed, trying fallback to 'route_name'...", error.message);
+            const fallback = await supabase.from('route_presets').upsert({
+                route_name: routeNameWithSuffix,
+                price: parseFloat(price),
+                wage: parseFloat(wage)
+            }, { onConflict: 'route_name' });
+            error = fallback.error;
+        }
 
         if (error) {
             console.error("Error saving preset:", error);
@@ -283,7 +378,13 @@ export const useTrips = () => {
         const suffix = `_${m + 1}_${y}`;
         const targetName = `${route.trim()}${suffix}`;
 
-        const { error } = await supabase.from('route_presets').delete().eq('route_name', targetName);
+        let { error } = await supabase.from('route_presets').delete().eq('route', targetName);
+        if (error) {
+            console.warn("Delete with 'route' failed, trying 'route_name' fallback...");
+            const fallback = await supabase.from('route_presets').delete().eq('route_name', targetName);
+            error = fallback.error;
+        }
+
         if (error) return { success: false, error };
 
         await fetchPresets(m, y);
@@ -589,6 +690,7 @@ export const useTrips = () => {
         routePresets, cnDeductions, setCnDeductions,
         saveRoutePreset, deletePreset, fetchPresets,
         isSupabaseReady, fetchTrips, loading, uploadFile,
-        currentMonthTripsEnriched, bulkUpdateRoutePrice
+        currentMonthTripsEnriched, bulkUpdateRoutePrice,
+        basketTiers, saveBasketTier, deleteBasketTier, checkAndCleanupOldImages
     };
 };
