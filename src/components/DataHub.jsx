@@ -118,7 +118,7 @@ const DataHub = ({
         const merged = Object.values(groups).map(g => {
             const uniqueRoutes = Array.from(new Set(g.routes)).filter(Boolean);
             g.route = uniqueRoutes.length > 0 ? uniqueRoutes.join(', ') : '-';
-            g.profit = (g.price + g.basket) - (g.fuel + g.wage + g.maintenance + g.basketShare);
+            g.profit = (g.price + g.basket) - (g.fuel + g.wage + g.basketShare);
             g.fuel_bill_url = g.fuel_bill_urls[0] || null;
             g.maintenance_bill_url = g.maintenance_bill_urls[0] || null;
             g.basket_bill_url = g.basket_bill_urls[0] || null;

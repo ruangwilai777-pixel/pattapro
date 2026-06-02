@@ -18,7 +18,8 @@ const normalizeTrip = (t) => {
     // basketShare reads from staff_share in DB or basketShare in frontend
     const basketShare = p(t.basketShare) || p(t.basket_share) || p(t.staff_share) || 0;
 
-    const profit = (price + basket) - (fuel + wage + maintenance + basketShare);
+    // Profit calculation does NOT subtract maintenance (repair cost) or staffShare (advance payment)
+    const profit = (price + basket) - (fuel + wage + basketShare);
 
     // Date normalization
     let dateStr = getLocalDate();
@@ -288,6 +289,9 @@ export const useTrips = () => {
             totalStaffAdvance: 0, totalRevenue: 0, totalProfit: 0
         });
 
+        // Subtract maintenance (repair cost) and staffShare (advance payment) from totalProfit at the monthly summary level
+        baseStats.totalProfit = baseStats.totalProfit - baseStats.totalMaintenance - baseStats.totalStaffAdvance;
+
         const driverGroups = {};
         tripsData.forEach(t => {
             if (!driverGroups[t.driverName]) driverGroups[t.driverName] = [];
@@ -414,6 +418,8 @@ export const useTrips = () => {
                 if (!enriched.price || enriched.price === 0) enriched.price = preset.price || 0;
                 if (!enriched.wage || enriched.wage === 0) enriched.wage = preset.wage || 0;
             }
+            // Recompute profit based on enriched price and wage
+            enriched.profit = (enriched.price + enriched.basket) - (enriched.fuel + enriched.wage + enriched.basketShare);
             return enriched;
         });
     }, [trips, currentMonth, currentYear, routePresets]);

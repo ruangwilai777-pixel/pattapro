@@ -369,6 +369,9 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                     };
                                 }, { count: 0, price: 0, fuel: 0, wage: 0, maintenance: 0, basket: 0, basketShare: 0, staffShare: 0, profit: 0 });
 
+                                // Subtract maintenance (repair cost) and staffShare (advance payment) from total profit at monthly level
+                                totals.profit = totals.profit - totals.maintenance - totals.staffShare;
+
                                 const totalCellStyles = { padding: '0.75rem 0.2rem', textAlign: 'center', fontSize: '0.85rem', fontFamily: "'Outfit', sans-serif" };
 
                                 return (
