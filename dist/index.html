@@ -21,20 +21,171 @@
         min-height: 100vh !important;
       }
     }
+    
+    /* Restore and compact the basket details container to fit perfectly inside the frame */
+    .basket-detail-glass {
+      display: block !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      border: 1px dashed rgba(79, 70, 229, 0.3) !important;
+      border-radius: 12px !important;
+      padding: 8px !important;
+      margin-top: 6px !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow: hidden !important;
+    }
+    /* Force internal grid to use minmax(0, 1fr) to prevent horizontal blowout */
+    .basket-detail-glass > div:first-child {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+      gap: 6px !important;
+      width: 100% !important;
+      margin-bottom: 8px !important;
+    }
+    .basket-detail-glass > div:first-child > div {
+      min-width: 0 !important;
+      width: 100% !important;
+    }
+    /* Compact label fonts and prevent wrapping blowout */
+    .basket-detail-glass label {
+      font-size: 8.5px !important;
+      font-weight: 700 !important;
+      color: #475569 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      display: block !important;
+      margin-bottom: 2px !important;
+      text-transform: none !important;
+    }
+    /* Shrink input fields to stay inside column */
+    .basket-detail-glass input.input-premium-compact {
+      height: 30px !important;
+      padding: 2px 6px !important;
+      font-size: 0.75rem !important;
+      border-radius: 6px !important;
+      border: 1px solid #cbd5e1 !important;
+      background: #fff !important;
+      color: #1e40af !important;
+      min-width: 0 !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    /* Compact calculation summary lines */
+    .basket-calc-summary {
+      margin-top: 6px !important;
+    }
+    .basket-calc-summary .calc-row {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      padding: 4px 0 !important;
+      border-bottom: 1px dashed #e2e8f0 !important;
+      font-size: 0.75rem !important;
+      color: #475569 !important;
+    }
+    .basket-calc-summary .calc-row:last-child {
+      border-bottom: none !important;
+    }
+    .basket-calc-summary .calc-value {
+      font-weight: 700 !important;
+      color: #1e40af !important;
+    }
+    .basket-calc-summary .calc-row.highlight .calc-value {
+      color: #059669 !important;
+    }
+    /* Hide the edit hover buttons in the log table */
+    .edit-hover-btn {
+      display: none !important;
+    }
+    /* Hide the truck plate number line (or the small '-' under the name) in the old admin summary table */
+    .admin-summary-table tbody td:first-child div:nth-child(2) {
+      display: none !important;
+    }
+    /* Hide the 'กำไร' (Profit) column (7th column) from the summary table */
+    .admin-summary-table th:nth-child(7),
+    .admin-summary-table td:nth-child(7) {
+      display: none !important;
+    }
+    
+    @keyframes pattaPulseGlow {
+      0% { 
+        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2); 
+        transform: translateX(-50%) scale(1);
+      }
+      50% { 
+        box-shadow: 0 12px 36px rgba(99, 102, 241, 0.75), 0 0 20px rgba(99, 102, 241, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25); 
+        transform: translateX(-50%) translateY(-2px) scale(1.03); 
+      }
+      100% { 
+        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2); 
+        transform: translateX(-50%) scale(1);
+      }
+    }
+    .patta-glow-btn {
+      animation: pattaPulseGlow 3s infinite ease-in-out;
+    }
+    .patta-glow-btn:hover {
+      animation: none !important;
+    }
+
+    /* Mobile responsive vertical stacking to prevent edit modal grid blowout in old admin panel */
+    @media (max-width: 768px) {
+      body .admin-trip-form-card .admin-form-grid-3,
+      body .admin-trip-form-card .admin-form-grid,
+      body .admin-trip-form-card .admin-form-grid-2 {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      body .admin-trip-form-card .grid-column-v,
+      body .admin-trip-form-card .grid-column {
+        width: 100% !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+        box-sizing: border-box !important;
+      }
+      body .admin-trip-form-card .input-field-premium {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+      }
+      body .admin-trip-form-card input.input-premium-compact,
+      body .admin-trip-form-card input.input-premium-ultra-compact,
+      body .admin-trip-form-card input {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+      }
+      /* Ensure basket details grid is bulletproof on mobile */
+      body .admin-trip-form-card .basket-detail-glass > div:first-child {
+        display: flex !important;
+        gap: 8px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      body .admin-trip-form-card .basket-detail-glass > div:first-child > div {
+        flex: 1 !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+      }
+      /* Squeeze spacing for compact touch targets on mobile */
+      body .admin-trip-form-card {
+        padding: 10px !important;
+        margin: 0 !important;
+        border-radius: 12px !important;
+      }
+    }
   </style>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Patta Driver" />
   <meta name="theme-color" content="#f5f5f7" />
   <title>ภัทธา ทรานสปอร์ต แอนด์ โลจิสติกส์</title>
-  
-  <script>
-    // If the hash contains admin, redirect to /admin to load the new admin panel
-    if (window.location.hash.includes('admin')) {
-      window.location.replace('/admin' + window.location.hash);
-    }
-  </script>
   
   <script>
     // Silently mock/disable geolocation permission requests to prevent popup prompt
@@ -59,6 +210,134 @@
 
 <body>
   <div id="root"></div>
+  <script>
+    // Direct redirect to the new admin panel if the URL contains admin hash
+    (function() {
+      function checkHash() {
+        if (window.location.hash.includes('admin')) {
+          window.location.replace('/admin');
+        }
+      }
+      window.addEventListener('load', checkHash);
+      window.addEventListener('hashchange', checkHash);
+      checkHash();
+    })();
+  </script>
+  
+  <script>
+    // Custom global touch-pinch gesture zoom and perfectly symmetrical floating controller for driver overlays (Billing, TripLog, Slip)
+    (function() {
+      var zoomLevel = 1.0;
+      var activeTarget = null;
+      var zoomWidget = null;
+
+      function getActiveOverlay() {
+        return document.querySelector('.glass-card, .trip-log-card, .slip-card-premium');
+      }
+
+      function applyZoom(target, level) {
+        if (target) {
+          target.style.zoom = level;
+          if (zoomWidget) {
+            var txt = zoomWidget.querySelector('.zoom-txt');
+            if (txt) txt.textContent = 'ซูม: ' + Math.round(level * 100) + '%';
+          }
+        }
+      }
+
+      var touchStartDist = 0;
+      var initialScale = 1.0;
+
+      document.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 2) {
+          var target = getActiveOverlay();
+          if (target) {
+            activeTarget = target;
+            var t1 = e.touches[0];
+            var t2 = e.touches[1];
+            touchStartDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+            initialScale = zoomLevel;
+          }
+        }
+      }, { passive: true });
+
+      document.addEventListener('touchmove', function(e) {
+        if (e.touches.length === 2 && activeTarget && touchStartDist > 0) {
+          var t1 = e.touches[0];
+          var t2 = e.touches[1];
+          var dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+          var factor = dist / touchStartDist;
+          zoomLevel = Math.min(1.8, Math.max(0.6, initialScale * factor));
+          applyZoom(activeTarget, zoomLevel);
+        }
+      }, { passive: true });
+
+      document.addEventListener('touchend', function(e) {
+        if (e.touches.length < 2) {
+          touchStartDist = 0;
+          activeTarget = null;
+        }
+      });
+
+      function updateZoomWidget() {
+        var target = getActiveOverlay();
+        if (target) {
+          if (!zoomWidget) {
+            zoomWidget = document.createElement('div');
+            zoomWidget.className = 'no-print';
+            zoomWidget.style.cssText = 'position: fixed; top: 16px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 6px 14px; display: flex; align-items: center; justify-content: center; gap: 12px; z-index: 999999; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; transition: all 0.3s ease;';
+            
+            zoomWidget.innerHTML = [
+              // Left Group (64px total width)
+              '<div style="display: flex; align-items: center; gap: 8px; width: 64px; justify-content: flex-start;">',
+                '<button class="zoom-btn-reset" title="รีเซ็ต" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: #818cf8; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; outline: none; -webkit-tap-highlight-color: transparent; transition: all 0.2s;">↺</button>',
+                '<button class="zoom-btn-minus" title="ซูมออก" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; outline: none; -webkit-tap-highlight-color: transparent; transition: all 0.2s;">-</button>',
+              '</div>',
+              
+              // Center Group
+              '<span class="zoom-txt" style="font-size: 12px; font-weight: 800; color: #f1f5f9; min-width: 76px; text-align: center; white-space: nowrap; letter-spacing: 0.5px;">ซูม: 100%</span>',
+              
+              // Right Group (64px total width)
+              '<div style="display: flex; align-items: center; gap: 8px; width: 64px; justify-content: flex-end;">',
+                '<button class="zoom-btn-plus" title="ซูมเข้า" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; outline: none; -webkit-tap-highlight-color: transparent; transition: all 0.2s;">+</button>',
+                '<button class="zoom-btn-info" title="คำแนะนำ" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: #fbbf24; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; outline: none; -webkit-tap-highlight-color: transparent; transition: all 0.2s;">💡</button>',
+              '</div>'
+            ].join('');
+
+            zoomWidget.querySelector('.zoom-btn-minus').onclick = function(ev) {
+              ev.preventDefault();
+              zoomLevel = Math.max(0.6, zoomLevel - 0.1);
+              applyZoom(getActiveOverlay(), zoomLevel);
+            };
+            zoomWidget.querySelector('.zoom-btn-plus').onclick = function(ev) {
+              ev.preventDefault();
+              zoomLevel = Math.min(1.8, zoomLevel + 0.1);
+              applyZoom(getActiveOverlay(), zoomLevel);
+            };
+            zoomWidget.querySelector('.zoom-btn-reset').onclick = function(ev) {
+              ev.preventDefault();
+              zoomLevel = 1.0;
+              applyZoom(getActiveOverlay(), zoomLevel);
+            };
+            zoomWidget.querySelector('.zoom-btn-info').onclick = function(ev) {
+              ev.preventDefault();
+              alert("💡 คำแนะนำ: คุณสามารถใช้สองนิ้วกางบนหน้าจอเพื่อย่อ-ขยายซูมดูหน้านี้ได้เช่นกันครับ");
+            };
+
+            document.body.appendChild(zoomWidget);
+          }
+        } else {
+          if (zoomWidget) {
+            zoomWidget.remove();
+            zoomWidget = null;
+            zoomLevel = 1.0;
+          }
+        }
+      }
+
+      setInterval(updateZoomWidget, 500);
+    })();
+  </script>
 </body>
 
 </html>

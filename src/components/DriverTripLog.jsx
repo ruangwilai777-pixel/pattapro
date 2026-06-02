@@ -1,6 +1,7 @@
 import React from 'react';
 
 const DriverTripLog = ({ trips, currentMonth, currentYear, driverName, isDriverCopy = false }) => {
+    const [zoom, setZoom] = React.useState(1.0);
     const monthNames = [
         'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
         'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
@@ -131,22 +132,27 @@ const DriverTripLog = ({ trips, currentMonth, currentYear, driverName, isDriverC
     const prevMonthIdx = (currentMonth - 1 + 12) % 12;
     const currMonthIdx = currentMonth;
 
+
+
     return (
-        <div className="trip-log-card" style={{
-            width: '100%',
-            maxWidth: '1200px',
-            margin: '0 auto',
-            background: 'white',
-            padding: '1.5rem',
-            borderRadius: '1.25rem',
-            color: 'black',
-            fontFamily: "'Sarabun', sans-serif",
-            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
-            border: '1.5px solid #e2e8f0',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'visible'
-        }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', gap: '10px' }}>
+            
+            <div className="trip-log-card" style={{
+                zoom: zoom,
+                width: '100%',
+                maxWidth: '1200px',
+                margin: '0 auto',
+                background: 'white',
+                padding: '1.5rem',
+                borderRadius: '1.25rem',
+                color: 'black',
+                fontFamily: "'Sarabun', sans-serif",
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
+                border: '1.5px solid #e2e8f0',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'visible'
+            }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', paddingBottom: '12px', borderBottom: '2px solid #f1f5f9' }}>
                 <h2 style={{ margin: 0, fontSize: '22px', fontWeight: '800', background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     🗓️ ตารางลงงานรายวัน: {driverName}
@@ -239,6 +245,7 @@ const DriverTripLog = ({ trips, currentMonth, currentYear, driverName, isDriverC
                     button { display: none !important; }
                 }
             `}} />
+        </div>
         </div>
     );
 };

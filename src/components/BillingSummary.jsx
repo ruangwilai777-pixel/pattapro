@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Printer, ShoppingBasket, Truck, ReceiptText } from 'lucide-react';
 
 const BillingSummary = ({ trips, currentMonth, currentYear, driverName = "นางสาว ภัทธา เรืองวิลัย", address = "เลขที่ 246 หมู่ 6 ต.เวียงตาล อ.ห้างฉัตร ลำปาง 52190", isDriverCopy = false, cnDeduction = 0 }) => {
+    const [zoom, setZoom] = React.useState(1.0);
     const monthNames = [
         'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
         'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
@@ -142,14 +143,19 @@ const BillingSummary = ({ trips, currentMonth, currentYear, driverName = "นา
     const totalAdvance = isDriverCopy ? trips.reduce((sum, t) => sum + (parseFloat(t.staffShare) || 0), 0) : 0;
     const grandTotal = isDriverCopy ? (totalAllRevenue + housingAllowance) - (totalAdvance + (parseFloat(cnDeduction) || 0)) : totalAllRevenue;
 
+
+
     return (
-        <div className="glass-card fade-in" style={{
-            width: '50%', minWidth: '650px', margin: '1.5rem auto',
-            display: 'flex', flexDirection: 'column', background: '#fff', color: '#000',
-            borderRadius: '1.25rem', border: '1.5px solid #e2e8f0', // Thinner, softer border for premium look
-            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
-            fontFamily: "'Sarabun', sans-serif", overflow: 'hidden'
-        }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', gap: '10px' }}>
+            
+            <div className="glass-card fade-in" style={{
+                zoom: zoom,
+                width: '100%', maxWidth: '800px', margin: '0 auto',
+                display: 'flex', flexDirection: 'column', background: '#fff', color: '#000',
+                borderRadius: '1.25rem', border: '1.5px solid #e2e8f0',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
+                fontFamily: "'Sarabun', sans-serif", overflow: 'hidden'
+            }}>
             <div style={{
                 padding: '1.5rem', display: 'flex', justifyContent: 'space-between',
                 alignItems: 'center', borderBottom: '2px solid #000', background: '#fff'
@@ -324,6 +330,7 @@ const BillingSummary = ({ trips, currentMonth, currentYear, driverName = "นา
                         .btn-icon, .X { display: none !important; }
                     }
                 `}</style>
+        </div>
         </div>
     );
 };

@@ -698,7 +698,7 @@ const DriverEntry = () => {
             {showBillingDoc && (
                 <div style={{
                     position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                    background: 'rgba(0,0,0,0.85)', zIndex: 9999, overflowY: 'auto', padding: '2rem 1rem'
+                    background: 'rgba(0,0,0,0.85)', zIndex: 9999, overflowY: 'auto', overflowX: 'auto', padding: '2rem 1rem'
                 }}>
                     <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative' }}>
                         <button
@@ -728,7 +728,7 @@ const DriverEntry = () => {
             {showTripLog && (
                 <div style={{
                     position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                    background: 'rgba(0,0,0,0.85)', zIndex: 9999, overflowY: 'auto', padding: '2rem 1rem'
+                    background: 'rgba(0,0,0,0.85)', zIndex: 9999, overflowY: 'auto', overflowX: 'auto', padding: '2rem 1rem'
                 }}>
                     <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
                         <button

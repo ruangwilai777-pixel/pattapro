@@ -9,6 +9,7 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
     const slipRef = React.useRef(null);
     const [isDownloading, setIsDownloading] = React.useState(false);
     const [capturedImg, setCapturedImg] = React.useState(null);
+    const [zoom, setZoom] = React.useState(1.0);
 
     // Safety Parser
     const p = (val) => parseFloat(val) || 0;
@@ -63,10 +64,12 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
         }
     };
 
+
+
     const modalContent = (
         <div className="modal-overlay fade-in">
-            <div className="slip-window">
-                <div ref={slipRef} className="glass-card slip-card-premium fade-in-up">
+            <div className="slip-window" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div ref={slipRef} className="glass-card slip-card-premium fade-in-up" style={{ zoom: zoom }}>
                     {/* Header */}
                     <div className="slip-header-premium">
                         <div className="header-brand">
@@ -208,6 +211,7 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
                     z-index: 9999;
                     padding: 2rem 1rem;
                     overflow-y: auto;
+                    overflow-x: auto;
                 }
                 .slip-window { width: 100%; max-width: 420px; }
                 .slip-card-premium { 
