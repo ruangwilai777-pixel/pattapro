@@ -53,9 +53,9 @@ const InstallPrompt = () => {
             zIndex: 9999,
             width: '90%',
             maxWidth: '400px',
-            background: 'rgba(15, 23, 42, 0.95)',
+            background: 'var(--bg-card)',
             backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid var(--glass-border)',
             borderRadius: '16px',
             padding: '16px',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
@@ -74,13 +74,13 @@ const InstallPrompt = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'white',
+                    color: 'var(--text-main)',
                     boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
                 }}>
                     <Download size={20} />
                 </div>
                 <div>
-                    <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: 'white' }}>ติดตั้งแอปพลิเคชัน</h4>
+                    <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: 'var(--text-main)' }}>ติดตั้งแอปพลิเคชัน</h4>
                     <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: 'var(--text-dim)' }}>เพื่อการใช้งานที่สะดวกยิ่งขึ้น</p>
                 </div>
             </div>
@@ -104,8 +104,8 @@ const InstallPrompt = () => {
                 <button
                     onClick={() => setIsVisible(false)}
                     style={{
-                        background: 'rgba(255,255,255,0.1)',
-                        color: 'white',
+                        background: 'var(--glass-border)',
+                        color: 'var(--text-main)',
                         border: 'none',
                         width: '32px',
                         height: '32px',

@@ -118,7 +118,7 @@ const TripTable = ({ trips, onDelete, onEdit, onExport }) => {
                     height: 32px;
                     border-radius: 6px;
                     object-fit: cover;
-                    border: 1px solid rgba(255, 255, 255, 0.15);
+                    border: 1px solid var(--glass-border);
                     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
                     cursor: pointer;
                     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s, border-color 0.2s;

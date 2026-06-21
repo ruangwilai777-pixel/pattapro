@@ -428,7 +428,7 @@ const TripForm = ({ onAdd, onUpdate, uploadFile, routePresets, fetchPresets, ext
                 .date-picker-row { display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; background: rgba(0,0,0,0.1); padding: 4px 8px; border-radius: 8px; }
                 .date-label { font-size: 10px; font-weight: 700; color: var(--text-dim); min-width: 35px; }
                 .date-controls { display: flex; align-items: center; gap: 4px; flex: 1; justify-content: flex-end; }
-                .date-nav-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: var(--text-dim); padding: 2px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+                .date-nav-btn { background: var(--glass-border); border: 1px solid var(--glass-border); color: var(--text-dim); padding: 2px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
                 .date-nav-btn:hover { background: rgba(129, 140, 248, 0.2); color: var(--primary); }
                 .date-input-minimal { background: transparent; border: none; padding: 0; color: var(--text-main); font-weight: 700; font-family: inherit; outline: none; font-size: 11.5px; cursor: pointer; text-align: right; }
                 
@@ -438,8 +438,8 @@ const TripForm = ({ onAdd, onUpdate, uploadFile, routePresets, fetchPresets, ext
                 .input-field-premium { display: flex; flex-direction: column; gap: 1px; position: relative; }
                 .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1px; height: 14px; }
                 .input-field-premium label { display: flex; align-items: center; gap: 3px; font-size: 9.5px; font-weight: 700; color: var(--text-dim); margin: 0; }
-                .input-premium-compact { background: rgba(0,0,0,0.2) !important; border: 1px solid rgba(255,255,255,0.06) !important; border-radius: 6px !important; padding: 4px 8px !important; color: white !important; font-size: 11px !important; font-weight: 600 !important; height: 28px; }
-                .input-premium-compact:focus { border-color: var(--primary) !important; background: rgba(255,255,255,0.03) !important; }
+                .input-premium-compact { background: rgba(0,0,0,0.2) !important; border: 1px solid var(--glass-border) !important; border-radius: 6px !important; padding: 4px 8px !important; color: white !important; font-size: 11px !important; font-weight: 600 !important; height: 28px; }
+                .input-premium-compact:focus { border-color: var(--primary) !important; background: var(--glass-border) !important; }
                 
                 .preview-btn-premium { background: rgba(45, 212, 191, 0.15); border: 1px solid rgba(45, 212, 191, 0.4); color: #2dd4bf; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: all 0.2s; }
                 .preview-btn-premium:hover { background: #2dd4bf; color: #0f172a; box-shadow: 0 0 10px rgba(45, 212, 191, 0.4); }

@@ -74,7 +74,7 @@ const TripEditModal = ({ isOpen, onClose, ...formProps }) => {
                     position: absolute;
                     top: -45px;
                     right: 0;
-                    background: rgba(255, 255, 255, 0.1);
+                    background: var(--glass-border);
                     border: 1px solid rgba(255, 255, 255, 0.2);
                     color: white;
                     width: 36px;

@@ -112,7 +112,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                 ยอดของรอบที่เลือก: {months[currentMonth]} {currentYear}
                             </p>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: '0.5rem', padding: '0.25rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', background: 'var(--glass-border)', borderRadius: '0.5rem', padding: '0.25rem' }}>
                             <button className="btn-icon" onClick={() => onMonthChange(-1)}><ChevronLeft size={18} /></button>
                             <span style={{ minWidth: '120px', textAlign: 'center', fontWeight: '500' }}>
                                 {months[currentMonth]} {currentYear}
@@ -140,7 +140,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
 
             {/* Salary Slips section - Moved to Top */}
             {showSlips && (
-                <div style={{ padding: '1.25rem 1.5rem', borderBottom: onlySlips ? 'none' : '1px solid rgba(255,255,255,0.05)', flexShrink: 0, background: 'rgba(255,255,255,0.02)' }}>
+                <div style={{ padding: '1.25rem 1.5rem', borderBottom: onlySlips ? 'none' : '1px solid var(--glass-border)', flexShrink: 0, background: 'var(--glass-border)' }}>
                     <h3 style={{ fontSize: '1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <ReceiptText size={18} color="var(--primary)" /> ออกสลิปเงินเดือนพนักงาน
                     </h3>
@@ -171,7 +171,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                 }, 1000) - cn;
 
                                 return (
-                                    <div key={name} className="glass-card" style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.8rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                    <div key={name} className="glass-card" style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.8rem', border: '1px solid var(--glass-border)' }}>
                                         <div>
                                             <p style={{ fontWeight: '600', marginBottom: '0.1rem', fontSize: '0.9rem' }}>{name}</p>
                                             <p style={{ fontSize: '0.7rem', color: 'var(--success)' }}>฿{totalPay.toLocaleString()}</p>
@@ -218,7 +218,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
             {!onlySlips && (
                 <div className="table-container" style={{ width: '100%', overflowX: 'auto' }}>
                     <table style={{ minWidth: '1000px' }}>
-                        <thead style={{ position: 'sticky', top: 0, zIndex: 1000, background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)' }}>
+                        <thead style={{ position: 'sticky', top: 0, zIndex: 1000, background: 'var(--bg-card)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid var(--glass-border)', boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)' }}>
                             <tr>
                                 <th style={{ width: '15%', padding: '0.5rem', textAlign: 'center' }}>วันที่</th>
                                 <th style={{ width: '10%', padding: '0.5rem', textAlign: 'left' }}>คนขับ</th>
@@ -268,7 +268,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                         style={isToday ? { background: 'rgba(99, 102, 241, 0.1)' } : {}}
                                         className="trip-row-hover"
                                     >
-                                        <td style={{ padding: '0.5rem', textAlign: 'center', borderRight: tIdx === 0 ? '1px solid rgba(255,255,255,0.03)' : 'none' }}>
+                                        <td style={{ padding: '0.5rem', textAlign: 'center', borderRight: tIdx === 0 ? '1px solid var(--glass-border)' : 'none' }}>
                                             {tIdx === 0 ? (
                                                 <span style={{ fontWeight: '500', color: isToday ? 'var(--primary)' : 'var(--text-main)', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
                                                     {date.toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
@@ -352,7 +352,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                 ));
                             })}
                         </tbody>
-                        <tfoot style={{ position: 'sticky', bottom: 0, background: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(20px)', borderTop: '2px solid var(--primary-glow)', zIndex: 20 }}>
+                        <tfoot style={{ position: 'sticky', bottom: 0, background: 'var(--bg-card)', backdropFilter: 'blur(20px)', borderTop: '2px solid var(--primary-glow)', zIndex: 20 }}>
                             {(() => {
                                 const totals = datesInRange.reduce((acc, date) => {
                                     const data = getDayData(date);
@@ -378,11 +378,11 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                     <tr style={{ fontWeight: '800' }}>
                                         <td style={{ ...totalCellStyles, color: 'var(--primary)', textAlign: 'center', fontFamily: "'Chakra Petch', sans-serif", fontSize: '0.9rem' }}>
                                             <div>รวมสรุป</div>
-                                            <div style={{ fontSize: '0.7rem', color: 'white', opacity: 0.8 }}>({totals.count} เที่ยว)</div>
+                                            <div style={{ fontSize: '0.7rem', color: 'var(--text-main)', opacity: 0.8 }}>({totals.count} เที่ยว)</div>
                                         </td>
                                         <td></td>
                                         <td></td>
-                                        <td style={{ ...totalCellStyles, color: 'white' }}>
+                                        <td style={{ ...totalCellStyles, color: 'var(--text-main)' }}>
                                             <div style={{ fontSize: '0.6rem', opacity: 0.6, marginBottom: '-2px' }}>รวมค่าเที่ยว</div>
                                             ฿{totals.price.toLocaleString()}
                                         </td>
@@ -440,7 +440,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
             {selectedDriverForHistory && (
                 <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
                     <div className="glass-card" style={{ width: '100%', maxWidth: '600px', maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
-                        <div className="header" style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                        <div className="header" style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)' }}>
                             <div>
                                 <h3 style={{ fontSize: '1.25rem' }}>ประวัติงาน: {selectedDriverForHistory.name}</h3>
                                 <p style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>รวมทั้งสิ้น {selectedDriverForHistory.trips.length} เที่ยว</p>
@@ -450,7 +450,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                         <div style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                                 {selectedDriverForHistory.trips.map((trip, idx) => (
-                                    <div key={trip.id || idx} style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div key={trip.id || idx} style={{ background: 'var(--glass-border)', padding: '1rem', borderRadius: '1rem', border: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div>
                                             <p style={{ fontWeight: '700', color: 'var(--primary)' }}>{trip.date}</p>
                                             <p style={{ fontSize: '0.9rem' }}>{trip.route}</p>
@@ -470,7 +470,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
             {isBulkOpen && (
                 <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
                     <div className="glass-card fade-in" style={{ width: '100%', maxWidth: '500px', maxHeight: '95vh', display: 'flex', flexDirection: 'column', borderRadius: '1.5rem', background: 'var(--glass-bg)', color: 'var(--text-main)', border: '1px solid var(--glass-border)', backdropFilter: 'blur(24px)', boxShadow: 'var(--glass-shadow)' }}>
-                        <div className="header" style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                        <div className="header" style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)' }}>
                             <div>
                                 <h3 style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '800' }}>
                                     <Plus size={20} color="var(--primary)" /> ป้อนสายรถด่วน (Bulk Update)
@@ -487,7 +487,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                                     <select
                                         className="input-premium-compact"
-                                        style={{ height: '38px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '8px', padding: '0 10px', fontSize: '0.9rem' }}
+                                        style={{ height: '38px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '8px', padding: '0 10px', fontSize: '0.9rem' }}
                                         value={bulkMonth}
                                         onChange={(e) => setBulkMonth(parseInt(e.target.value))}
                                     >
@@ -497,7 +497,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                     </select>
                                     <select
                                         className="input-premium-compact"
-                                        style={{ height: '38px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '8px', padding: '0 10px', fontSize: '0.9rem' }}
+                                        style={{ height: '38px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '8px', padding: '0 10px', fontSize: '0.9rem' }}
                                         value={bulkYear}
                                         onChange={(e) => setBulkYear(parseInt(e.target.value))}
                                     >
@@ -515,7 +515,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                     type="text"
                                     list="bulk-route-options"
                                     className="input-premium-compact"
-                                    style={{ height: '38px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '8px', padding: '0 12px', fontSize: '0.9rem', width: '100%' }}
+                                    style={{ height: '38px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '8px', padding: '0 12px', fontSize: '0.9rem', width: '100%' }}
                                     placeholder="เช่น 522..."
                                     value={bulkRoute}
                                     onChange={(e) => {
@@ -540,7 +540,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                 <input
                                     type="number"
                                     className="input-premium-compact"
-                                    style={{ height: '38px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '8px', padding: '0 12px', fontSize: '0.9rem', width: '100%' }}
+                                    style={{ height: '38px', background: 'rgba(0,0,0,0.3)', border: '1px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '8px', padding: '0 12px', fontSize: '0.9rem', width: '100%' }}
                                     placeholder="ระบุจำนวนเงินค่าเที่ยว..."
                                     value={bulkPrice}
                                     onChange={(e) => setBulkPrice(e.target.value)}
@@ -566,7 +566,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                         height: '40px',
                                         background: 'linear-gradient(135deg, var(--primary), var(--accent))',
                                         border: 'none',
-                                        color: 'white',
+                                        color: 'var(--text-main)',
                                         fontWeight: '700',
                                         cursor: 'pointer',
                                         borderRadius: '8px'
@@ -581,8 +581,8 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                 </div>
             )}
             <style>{`
-                .clickable-row:hover { background: rgba(255,255,255,0.05) !important; }
-                .trip-row-hover:hover { background: rgba(255,255,255,0.02); }
+                .clickable-row:hover { background: var(--glass-border) !important; }
+                .trip-row-hover:hover { background: var(--glass-border); }
                 .bill-icon-btn { margin-left: 4px; color: var(--primary); opacity: 0.7; }
                 .bill-icon-btn:hover { opacity: 1; transform: scale(1.1); }
                 .bill-thumbnail-link { display: inline-flex; align-items: center; justify-content: center; }
@@ -591,7 +591,7 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                     height: 32px;
                     border-radius: 6px;
                     object-fit: cover;
-                    border: 1px solid rgba(255, 255, 255, 0.15);
+                    border: 1px solid var(--glass-border);
                     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
                     cursor: pointer;
                     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s, border-color 0.2s;

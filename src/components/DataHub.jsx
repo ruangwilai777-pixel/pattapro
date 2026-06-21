@@ -14,8 +14,8 @@ const fmt = (n) => Math.round(n).toLocaleString('th-TH');
 /* ── KPI card ── */
 const KpiCard = ({ icon: Icon, label, value, color, sub }) => (
     <div className="glass-card kpi-card-hover" style={{
-        background: 'rgba(30, 41, 59, 0.45)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
+        background: 'var(--glass-bg)',
+        border: '1px solid var(--glass-border)',
         borderRadius: '20px',
         padding: '1.25rem',
         display: 'flex', flexDirection: 'column', gap: '0.4rem',
@@ -26,12 +26,12 @@ const KpiCard = ({ icon: Icon, label, value, color, sub }) => (
     }}>
         <div style={{ position: 'absolute', top: -16, right: -16, width: 64, height: 64, borderRadius: '50%', background: `${color}0d` }} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px' }}>{label}</span>
+            <span style={{ fontSize: '0.68rem', fontWeight: 800, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px' }}>{label}</span>
             <div style={{ width: 34, height: 34, borderRadius: 12, background: `${color}18`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Icon size={16} color={color} />
             </div>
         </div>
-        <div style={{ fontSize: '1.5rem', fontWeight: 900, color: 'white', letterSpacing: '-0.5px' }}>{value}</div>
+        <div style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.5px' }}>{value}</div>
         {sub && <div style={{ fontSize: '0.7rem', color: color, fontWeight: 700 }}>{sub}</div>}
     </div>
 );
@@ -200,16 +200,16 @@ const DataHub = ({
             {/* ════════════════════════════════════════
                 TOP BAR: CONTROLS & NAVIGATOR
             ════════════════════════════════════════ */}
-            <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'stretch', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', background: 'rgba(15,23,42,0.4)', padding: '0.85rem 1.25rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'stretch', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', background: 'var(--bg-card)', padding: '0.85rem 1.25rem', borderRadius: '20px', border: '1px solid var(--glass-border)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: 3 }}>
-                        <button onClick={() => onMonthChange(-1)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', borderRadius: 8, width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'var(--glass-border)', border: '1px solid var(--glass-border)', borderRadius: 12, padding: 3 }}>
+                        <button onClick={() => onMonthChange(-1)} style={{ background: 'transparent', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', borderRadius: 8, width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <ChevronLeft size={16} />
                         </button>
-                        <span style={{ minWidth: 130, textAlign: 'center', fontSize: '0.85rem', fontWeight: 700, color: 'white' }}>
+                        <span style={{ minWidth: 130, textAlign: 'center', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)' }}>
                             {months[currentMonth]} {currentYear}
                         </span>
-                        <button onClick={() => onMonthChange(1)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', borderRadius: 8, width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <button onClick={() => onMonthChange(1)} style={{ background: 'transparent', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', borderRadius: 8, width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <ChevronRight size={16} />
                         </button>
                     </div>
@@ -223,14 +223,14 @@ const DataHub = ({
                     {/* Bulk Update Trigger */}
                     <button 
                         onClick={() => setIsBulkOpen(true)}
-                        style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'white', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 800, boxShadow: '0 4px 12px rgba(16,185,129,0.3)' }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'var(--text-main)', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 800, boxShadow: '0 4px 12px rgba(16,185,129,0.3)' }}
                     >
                         <Plus size={15} /> ป้อนด่วนรายเดือน (Bulk)
                     </button>
                     {/* CSV Export */}
                     <button 
                         onClick={onExport} 
-                        style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)', color: '#94a3b8', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 800 }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 10, border: '1px solid var(--glass-border)', background: 'var(--glass-border)', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 800 }}
                     >
                         <Download size={14} /> Export CSV
                     </button>
@@ -240,8 +240,8 @@ const DataHub = ({
             {/* ════════════════════════════════════════
                 SECTION 2: สรุปงานแยกตามสายรถ (ROUTE SUMMARY)
             ════════════════════════════════════════ */}
-            <div className="glass-card" style={{ background: 'rgba(30, 41, 59, 0.25)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 20, padding: '1.25rem', backdropFilter: 'blur(10px)' }}>
-                <h3 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'white', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div className="glass-card" style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 20, padding: '1.25rem', backdropFilter: 'blur(10px)' }}>
+                <h3 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                     <Truck size={16} color="#a78bfa" /> 🚚 สถิติวิเคราะห์ประสิทธิภาพแยกรายเส้นทาง (Route Performance)
                 </h3>
                 {routeStats.length === 0 ? (
@@ -250,7 +250,7 @@ const DataHub = ({
                     <div style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
                             <thead>
-                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                                <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
                                     {['#','สายงาน','จำนวนเที่ยววิ่ง','รายได้รวม','กำไรสุทธิรวม'].map(h => (
                                         <th key={h} style={{ padding: '0.5rem 0.75rem', textAlign: h==='สายงาน'||h==='#'?'left':'right', color: '#64748b', fontWeight: 700, fontSize: '0.7rem', whiteSpace: 'nowrap' }}>{h}</th>
                                     ))}
@@ -261,11 +261,11 @@ const DataHub = ({
                                     const barPct = routeStats[0].trips > 0 ? (r.trips / routeStats[0].trips) * 100 : 0;
                                     const isPos = r.profit >= 0;
                                     return (
-                                        <tr key={r.route} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                                        <tr key={r.route} style={{ borderBottom: '1px solid var(--glass-border)' }}>
                                             <td style={{ padding: '0.6rem 0.75rem', color: '#475569', fontWeight: 700, width: 32 }}>#{i+1}</td>
                                             <td style={{ padding: '0.6rem 0.75rem' }}>
                                                 <div style={{ fontWeight: 700, color: '#e2e8f0', marginBottom: 4 }}>{r.route}</div>
-                                                <div style={{ height: 3, borderRadius: 3, background: 'rgba(255,255,255,0.04)', overflow: 'hidden', width: '120px' }}>
+                                                <div style={{ height: 3, borderRadius: 3, background: 'var(--glass-border)', overflow: 'hidden', width: '120px' }}>
                                                     <div style={{ height: '100%', width: `${barPct}%`, borderRadius: 3, background: 'linear-gradient(90deg, #a78bfa, #8b5cf6)' }} />
                                                 </div>
                                             </td>
@@ -284,10 +284,10 @@ const DataHub = ({
             {/* ════════════════════════════════════════
                 SECTION 3: ตารางวิ่งงานทั้งหมด (ALL TRIPS FLAT TABLE)
             ════════════════════════════════════════ */}
-            <div className="glass-card" style={{ background: 'rgba(30, 41, 59, 0.25)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 20, padding: '1.25rem', backdropFilter: 'blur(10px)' }}>
+            <div className="glass-card" style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 20, padding: '1.25rem', backdropFilter: 'blur(10px)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <div>
-                        <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'white', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
                             <TableProperties size={18} color="#6366f1" /> 📋 ตารางรายการวิ่งงานทั้งหมดในเดือนนี้
                         </h3>
                         <p style={{ fontSize: '0.7rem', color: '#64748b', margin: '2px 0 0 0', fontWeight: 600 }}>แสดงข้อมูลแบบเรียงลำดับรายเที่ยว ไม่มีการรวบยอดการ์ดรายวัน</p>
@@ -300,7 +300,7 @@ const DataHub = ({
                 <div className="table-container" style={{ overflowX: 'auto', width: '100%' }}>
                     <table className="premium-data-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', textAlign: 'center' }}>
                         <thead>
-                            <tr style={{ background: 'rgba(15,23,42,0.4)', borderBottom: '2px solid rgba(255,255,255,0.08)', color: '#94a3b8' }}>
+                            <tr style={{ background: 'var(--bg-card)', borderBottom: '2px solid var(--glass-border)', color: 'var(--text-dim)' }}>
                                 <th style={{ padding: '12px 10px', textAlign: 'left', fontWeight: '800' }}>วันที่</th>
                                 <th style={{ padding: '12px 10px', textAlign: 'left', fontWeight: '800' }}>คนขับ</th>
                                 <th style={{ padding: '12px 10px', textAlign: 'left', fontWeight: '800' }}>สายงาน</th>
@@ -329,17 +329,17 @@ const DataHub = ({
                                     const maintReceipt = trip.maintenance_bill_url || trip.maintenance_url;
                                     const basketReceipt = trip.basket_bill_url || trip.basket_url;
                                     return (
-                                        <tr key={trip.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.2s' }} className="table-row-hover-dark">
+                                        <tr key={trip.id} style={{ borderBottom: '1px solid var(--glass-border)', transition: 'background 0.2s' }} className="table-row-hover-dark">
                                             <td style={{ padding: '12px 10px', textAlign: 'left', color: '#e2e8f0', fontWeight: 700, whiteSpace: 'nowrap' }}>
                                                 {new Date(trip.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })}
                                             </td>
-                                            <td style={{ padding: '12px 10px', textAlign: 'left', color: '#fff', fontWeight: 700 }}>
+                                            <td style={{ padding: '12px 10px', textAlign: 'left', color: 'var(--text-main)', fontWeight: 700 }}>
                                                 {trip.driverName || trip.driver_name || '-'}
                                             </td>
                                             <td style={{ padding: '12px 10px', textAlign: 'left', color: '#818cf8', fontWeight: 800 }}>
                                                 {trip.route}
                                             </td>
-                                            <td style={{ padding: '12px 10px', fontWeight: 700, textAlign: 'right', color: 'white' }}>
+                                            <td style={{ padding: '12px 10px', fontWeight: 700, textAlign: 'right', color: 'var(--text-main)' }}>
                                                 ฿{fmt(trip.price || 0)}
                                             </td>
                                             <td style={{ padding: '12px 10px', textAlign: 'right', color: '#f87171' }}>
@@ -396,10 +396,10 @@ const DataHub = ({
                                             </td>
                                             <td style={{ padding: '12px 10px' }}>
                                                 <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
-                                                    <button onClick={() => onEditTrip(trip)} className="ios-tap" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: '#38bdf8', width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} title="แก้ไข">
+                                                    <button onClick={() => onEditTrip(trip)} className="ios-tap" style={{ background: 'var(--glass-border)', border: '1px solid var(--glass-border)', color: '#38bdf8', width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} title="แก้ไข">
                                                         <Edit2 size={13} />
                                                     </button>
-                                                    <button onClick={() => { if(window.confirm('ยืนยันที่จะลบข้อมูลรายการของวันนี้ทั้งหมดสำหรับคนขับคนนี้?')) { trip.ids.forEach(id => onDeleteTrip(id)); } }} className="ios-tap" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: '#f43f5e', width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} title="ลบ">
+                                                    <button onClick={() => { if(window.confirm('ยืนยันที่จะลบข้อมูลรายการของวันนี้ทั้งหมดสำหรับคนขับคนนี้?')) { trip.ids.forEach(id => onDeleteTrip(id)); } }} className="ios-tap" style={{ background: 'var(--glass-border)', border: '1px solid var(--glass-border)', color: '#f43f5e', width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} title="ลบ">
                                                         <Trash2 size={13} />
                                                     </button>
                                                 </div>
@@ -418,24 +418,24 @@ const DataHub = ({
             ════════════════════════════════════════ */}
             {isBulkOpen && (
                 <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-                    <div className="glass-card fade-in" style={{ width: '100%', maxWidth: '480px', maxHeight: '95vh', display: 'flex', flexDirection: 'column', borderRadius: '24px', background: 'rgba(30, 41, 59, 0.75)', color: 'white', border: '1px solid rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(24px)', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
-                        <div style={{ padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                    <div className="glass-card fade-in" style={{ width: '100%', maxWidth: '480px', maxHeight: '95vh', display: 'flex', flexDirection: 'column', borderRadius: '24px', background: 'var(--glass-bg)', color: 'var(--text-main)', border: '1px solid var(--glass-border)', backdropFilter: 'blur(24px)', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
+                        <div style={{ padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)' }}>
                             <div>
                                 <h3 style={{ fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '900', margin: 0 }}>
                                     <Plus size={20} color="#10b981" /> ป้อนข้อมูลค่าเที่ยวรวดเดียว (Bulk Update)
                                 </h3>
-                                <p style={{ fontSize: '0.72rem', color: '#94a3b8', margin: '4px 0 0 0', fontWeight: 600 }}>ป้อนค่าเที่ยวสายรถแบบคงที่สำหรับทุกวันในเดือนด่วน</p>
+                                <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', margin: '4px 0 0 0', fontWeight: 600 }}>ป้อนค่าเที่ยวสายรถแบบคงที่สำหรับทุกวันในเดือนด่วน</p>
                             </div>
-                            <button onClick={() => setIsBulkOpen(false)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}><X size={22} /></button>
+                            <button onClick={() => setIsBulkOpen(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-dim)', cursor: 'pointer' }}><X size={22} /></button>
                         </div>
                         
                         <form onSubmit={handleBulkSubmit} style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                             {/* เดือน/ปี */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                                <label style={{ fontSize: '0.78rem', fontWeight: '700', color: '#94a3b8' }}>เลือกเดือน / ปีที่รวบยอด</label>
+                                <label style={{ fontSize: '0.78rem', fontWeight: '700', color: 'var(--text-dim)' }}>เลือกเดือน / ปีที่รวบยอด</label>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                     <select
-                                        style={{ height: '38px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '10px', padding: '0 10px', fontSize: '0.85rem', outline: 'none' }}
+                                        style={{ height: '38px', background: 'rgba(0,0,0,0.4)', border: '1px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '10px', padding: '0 10px', fontSize: '0.85rem', outline: 'none' }}
                                         value={bulkMonth}
                                         onChange={(e) => setBulkMonth(parseInt(e.target.value))}
                                     >
@@ -444,7 +444,7 @@ const DataHub = ({
                                         ))}
                                     </select>
                                     <select
-                                        style={{ height: '38px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '10px', padding: '0 10px', fontSize: '0.85rem', outline: 'none' }}
+                                        style={{ height: '38px', background: 'rgba(0,0,0,0.4)', border: '1px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '10px', padding: '0 10px', fontSize: '0.85rem', outline: 'none' }}
                                         value={bulkYear}
                                         onChange={(e) => setBulkYear(parseInt(e.target.value))}
                                     >
@@ -457,7 +457,7 @@ const DataHub = ({
 
                             {/* ตัวเลือกด่วนจากรายการวิ่ง */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                                <label style={{ fontSize: '0.78rem', fontWeight: '700', color: '#94a3b8' }}>เลือกด่วนจากรายการวิ่ง (คลิกเพื่อเลือกทันที)</label>
+                                <label style={{ fontSize: '0.78rem', fontWeight: '700', color: 'var(--text-dim)' }}>เลือกด่วนจากรายการวิ่ง (คลิกเพื่อเลือกทันที)</label>
                                 {allAvailableRoutes.length === 0 ? (
                                     <div style={{ fontSize: '0.72rem', color: '#64748b', fontStyle: 'italic', padding: '10px', textAlign: 'center', background: 'rgba(0,0,0,0.2)', borderRadius: '10px' }}>ไม่มีข้อมูลสายงานที่บันทึกไว้ในระบบ</div>
                                 ) : (
@@ -470,7 +470,7 @@ const DataHub = ({
                                         padding: '6px',
                                         background: 'rgba(0,0,0,0.3)',
                                         borderRadius: '10px',
-                                        border: '1px solid rgba(255,255,255,0.06)'
+                                        border: '1px solid var(--glass-border)'
                                     }} className="custom-scrollbar">
                                         {allAvailableRoutes.map(({ route, price }) => {
                                             const isSelected = bulkRoute === route;
@@ -491,8 +491,8 @@ const DataHub = ({
                                                         gap: '2px',
                                                         padding: '8px 12px',
                                                         borderRadius: '8px',
-                                                        border: isSelected ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.08)',
-                                                        background: isSelected ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.03)',
+                                                        border: isSelected ? '1px solid #10b981' : '1px solid var(--glass-border)',
+                                                        background: isSelected ? 'rgba(16, 185, 129, 0.15)' : 'var(--glass-border)',
                                                         color: isSelected ? '#10b981' : '#e2e8f0',
                                                         cursor: 'pointer',
                                                         textAlign: 'left',
@@ -513,11 +513,11 @@ const DataHub = ({
 
                             {/* สายรถ */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                                <label style={{ fontSize: '0.78rem', fontWeight: '700', color: '#94a3b8' }}>สายรถ (เส้นทางวิ่ง)</label>
+                                <label style={{ fontSize: '0.78rem', fontWeight: '700', color: 'var(--text-dim)' }}>สายรถ (เส้นทางวิ่ง)</label>
                                 <input
                                     type="text"
                                     list="bulk-route-options"
-                                    style={{ height: '38px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '10px', padding: '0 12px', fontSize: '0.85rem', width: '100%', outline: 'none' }}
+                                    style={{ height: '38px', background: 'rgba(0,0,0,0.4)', border: '1px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '10px', padding: '0 12px', fontSize: '0.85rem', width: '100%', outline: 'none' }}
                                     placeholder="เช่น 522..."
                                     value={bulkRoute}
                                     onChange={(e) => {
@@ -538,10 +538,10 @@ const DataHub = ({
 
                             {/* จำนวนเงิน */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                                <label style={{ fontSize: '0.78rem', fontWeight: '700', color: '#94a3b8' }}>จำนวนเงินค่าเที่ยวตายตัว (บาท)</label>
+                                <label style={{ fontSize: '0.78rem', fontWeight: '700', color: 'var(--text-dim)' }}>จำนวนเงินค่าเที่ยวตายตัว (บาท)</label>
                                 <input
                                     type="number"
-                                    style={{ height: '38px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '10px', padding: '0 12px', fontSize: '0.85rem', width: '100%', outline: 'none' }}
+                                    style={{ height: '38px', background: 'rgba(0,0,0,0.4)', border: '1px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '10px', padding: '0 12px', fontSize: '0.85rem', width: '100%', outline: 'none' }}
                                     placeholder="ระบุราคาค่าเที่ยว..."
                                     value={bulkPrice}
                                     onChange={(e) => setBulkPrice(e.target.value)}
@@ -552,7 +552,7 @@ const DataHub = ({
                             <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem', justifyContent: 'flex-end' }}>
                                 <button
                                     type="button"
-                                    style={{ padding: '0 20px', height: '38px', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8', fontWeight: '700', cursor: 'pointer', borderRadius: '10px', fontSize: '0.8rem' }}
+                                    style={{ padding: '0 20px', height: '38px', background: 'transparent', border: '1px solid var(--glass-border)', color: 'var(--text-dim)', fontWeight: '700', cursor: 'pointer', borderRadius: '10px', fontSize: '0.8rem' }}
                                     onClick={() => setIsBulkOpen(false)}
                                     disabled={isBulkLoading}
                                 >
@@ -560,7 +560,7 @@ const DataHub = ({
                                 </button>
                                 <button
                                     type="submit"
-                                    style={{ padding: '0 20px', height: '38px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', border: 'none', color: 'white', fontWeight: '800', cursor: 'pointer', borderRadius: '10px', fontSize: '0.8rem', boxShadow: '0 4px 10px rgba(16,185,129,0.2)' }}
+                                    style={{ padding: '0 20px', height: '38px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', border: 'none', color: 'var(--text-main)', fontWeight: '800', cursor: 'pointer', borderRadius: '10px', fontSize: '0.8rem', boxShadow: '0 4px 10px rgba(16,185,129,0.2)' }}
                                     disabled={isBulkLoading}
                                 >
                                     {isBulkLoading ? 'กำลังบันทึก...' : 'บันทึกด่วน'}
@@ -582,18 +582,18 @@ const DataHub = ({
                     border-radius: 4px;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: rgba(255,255,255,0.15);
+                    background: var(--glass-border);
                     border-radius: 4px;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
                     background: rgba(255,255,255,0.3);
                 }
                 .table-row-hover-dark:hover {
-                    background: rgba(255, 255, 255, 0.035)!important;
+                    background: var(--glass-border)!important;
                 }
                 .kpi-card-hover:hover {
                     transform: translateY(-4px);
-                    border-color: rgba(255, 255, 255, 0.15)!important;
+                    border-color: var(--glass-border)!important;
                     box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.35)!important;
                 }
                 .receipt-preview-trigger {

@@ -126,7 +126,7 @@ const Dashboard = () => {
             <div className="header-flex-premium" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
                 {/* Left: logo + title */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
-                    <img src={logoBase64} alt="Patta Logo" style={{ height: '80px', borderRadius: '14px', boxShadow: '0 12px 32px rgba(0,0,0,0.6)', border: '2px solid rgba(255,255,255,0.1)' }} />
+                    <img src={logoBase64} alt="Patta Logo" style={{ height: '80px', borderRadius: '14px', boxShadow: '0 12px 32px rgba(0,0,0,0.6)', border: '2px solid var(--glass-border)' }} />
                     <div>
                         <h1 className="brand-logo" style={{ fontSize: '1.5rem', margin: 0, lineHeight: 1.2, fontWeight: 900 }}>ภัทธา ทรานสปอร์ต</h1>
                         <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', letterSpacing: '3px', fontWeight: 800 }}>PATTA TRANSPORT</span>
@@ -151,7 +151,7 @@ const Dashboard = () => {
             {/* ══════════════════════════════════════
                 TAB NAV
             ══════════════════════════════════════ */}
-            <div style={{ display: 'flex', gap: '6px', marginBottom: '1.75rem', background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '6px' }}>
+            <div style={{ display: 'flex', gap: '6px', marginBottom: '1.75rem', background: 'var(--bg-card)', border: '1px solid var(--glass-border)', borderRadius: '16px', padding: '6px' }}>
                 {TABS.map(({ id, label, icon: Icon }) => {
                     const active = activeTab === id;
                     return (
@@ -233,18 +233,18 @@ const Dashboard = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
                     {/* Month nav */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '4px' }}>
-                            <button onClick={() => handleMonthChange(-1)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', borderRadius: '8px', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-card)', border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '4px' }}>
+                            <button onClick={() => handleMonthChange(-1)} style={{ background: 'transparent', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', borderRadius: '8px', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <ChevronLeft size={16} />
                             </button>
-                            <span style={{ minWidth: '140px', textAlign: 'center', fontSize: '0.88rem', fontWeight: 700, color: 'white' }}>
+                            <span style={{ minWidth: '140px', textAlign: 'center', fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-main)' }}>
                                 {months[currentMonth]} {currentYear}
                             </span>
-                            <button onClick={() => handleMonthChange(1)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', borderRadius: '8px', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <button onClick={() => handleMonthChange(1)} style={{ background: 'transparent', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', borderRadius: '8px', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <ChevronRight size={16} />
                             </button>
                         </div>
-                        <button onClick={handleExport} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)', color: '#94a3b8', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 700 }}>
+                        <button onClick={handleExport} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 16px', borderRadius: '10px', border: '1px solid var(--glass-border)', background: 'var(--bg-card)', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 700 }}>
                             <Download size={14} /> Export CSV
                         </button>
                     </div>
@@ -340,7 +340,7 @@ const Dashboard = () => {
                     position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 500,
                     width: '56px', height: '56px', borderRadius: '50%', border: 'none',
                     background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                    color: 'white', cursor: 'pointer', fontSize: '1.6rem', fontWeight: 700,
+                    color: 'var(--text-main)', cursor: 'pointer', fontSize: '1.6rem', fontWeight: 700,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     boxShadow: '0 8px 24px rgba(99,102,241,0.5)',
                     transition: 'all 0.3s cubic-bezier(0.23,1,0.32,1)',
@@ -361,7 +361,7 @@ const Dashboard = () => {
                     flex: 1; min-width: 0;
                     background: var(--glass-bg); border-radius: 2rem;
                     border: 1px solid var(--glass-border); backdrop-filter: blur(20px);
-                    padding: 1.25rem; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.05);
+                    padding: 1.25rem; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5), inset 0 1px 1px var(--glass-border);
                     height: auto; display: flex; flex-direction: column; transition: all 0.6s cubic-bezier(0.23,1,0.32,1);
                 }
                 @media (max-width: 1200px) {

@@ -216,7 +216,7 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
                 .slip-window { width: 100%; max-width: 420px; }
                 .slip-card-premium { 
                     background: linear-gradient(165deg, #0f172a 0%, #020617 100%); 
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border: 1px solid var(--glass-border);
                     border-radius: 2.5rem;
                     overflow: hidden;
                     box-shadow: 0 40px 100px rgba(0,0,0,0.6);
@@ -252,13 +252,13 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
                     display: inline-flex; 
                     align-items: center; 
                     gap: 6px; 
-                    background: rgba(255, 255, 255, 0.05); 
+                    background: var(--glass-border); 
                     color: #94a3b8; 
                     padding: 6px 12px; 
                     border-radius: 12px; 
                     font-size: 0.6rem; 
                     font-weight: 700;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border: 1px solid var(--glass-border);
                     width: fit-content;
                 }
                 
@@ -267,10 +267,10 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
                     display: flex; 
                     justify-content: space-between; 
                     margin-bottom: 1.5rem; 
-                    background: rgba(255,255,255,0.02);
+                    background: var(--glass-border);
                     padding: 1.25rem;
                     border-radius: 1.5rem;
-                    border: 1px solid rgba(255,255,255,0.05);
+                    border: 1px solid var(--glass-border);
                 }
                 .info-item .label { display: block; font-size: 0.6rem; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
                 .info-item .value { font-size: 1.1rem; font-weight: 700; color: #f8fafc; }
@@ -287,16 +287,16 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
                     color: #64748b;
                 }
                 .data-table { 
-                    background: rgba(255, 255, 255, 0.01); 
+                    background: var(--glass-border); 
                     border-radius: 1.5rem; 
                     padding: 1.25rem; 
-                    border: 1px solid rgba(255, 255, 255, 0.03); 
+                    border: 1px solid var(--glass-border); 
                 }
                 .data-row { display: flex; justify-content: space-between; font-size: 0.95rem; color: #94a3b8; margin-bottom: 1rem; }
                 .data-row.highlight { color: #10b981; font-weight: 600; }
                 .data-row .val { color: #f1f5f9; font-weight: 700; }
                 .val-danger { color: #f43f5e; font-weight: 700; }
-                .data-divider { height: 1px; background: rgba(255, 255, 255, 0.05); margin: 1rem 0; border: none; }
+                .data-divider { height: 1px; background: var(--glass-border); margin: 1rem 0; border: none; }
                 .data-total { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.05rem; color: #f8fafc; }
 
                 .final-pay-container { margin-top: 1.5rem; position: relative; }
@@ -331,7 +331,7 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
                     align-items: center;
                     justify-content: center;
                     gap: 10px;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border: 1px solid var(--glass-border);
                     cursor: pointer;
                 }
                 .slip-btn.btn-primary {
@@ -340,17 +340,17 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
                     box-shadow: 0 10px 15px -3px rgba(129, 140, 248, 0.3);
                 }
                 .slip-btn.btn-outline {
-                    background: rgba(255, 255, 255, 0.05) !important;
+                    background: var(--glass-border) !important;
                     color: #94a3b8 !important;
-                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    border: 1px solid var(--glass-border) !important;
                 }
                 .slip-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.1); }
 
                 .text-safe { color: #10b981; }
                 .text-danger { color: #f43f5e; }
 
-                .btn-close-minimal { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #94a3b8; cursor: pointer; padding: 0.75rem; border-radius: 1rem; transition: all 0.2s; }
-                .btn-close-minimal:hover { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
+                .btn-close-minimal { background: var(--glass-border); border: 1px solid var(--glass-border); color: #94a3b8; cursor: pointer; padding: 0.75rem; border-radius: 1rem; transition: all 0.2s; }
+                .btn-close-minimal:hover { background: var(--glass-border); color: #ffffff; }
 
                 .print-only { display: none; }
                 
@@ -363,7 +363,7 @@ const SalarySlip = ({ driverName, trips, onClose, period, cnDeduction = 0 }) => 
                         border-radius: 1.5rem; 
                         /* Restore card look */
                         background: linear-gradient(165deg, #0f172a 0%, #020617 100%);
-                        border: 1px solid rgba(255, 255, 255, 0.1); 
+                        border: 1px solid var(--glass-border); 
                         box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
                     }
                     .slip-header-premium { padding: 1.25rem 1.25rem 0.5rem; }

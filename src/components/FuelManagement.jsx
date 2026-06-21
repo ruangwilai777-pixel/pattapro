@@ -77,7 +77,7 @@ const FuelManagement = ({ fuelRefills, trips, addFuelRefill, deleteFuelRefill })
                     <button onClick={() => setShowForm(!showForm)} className="btn-icon" style={{ background: 'rgba(129, 140, 248, 0.1)', color: 'var(--primary)', padding: '4px' }}>
                         <Plus size={16} />
                     </button>
-                    <button onClick={() => setIsExpanded(!isExpanded)} className="btn-icon" style={{ background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-dim)', padding: '4px' }}>
+                    <button onClick={() => setIsExpanded(!isExpanded)} className="btn-icon" style={{ background: 'var(--glass-border)', color: 'var(--text-dim)', padding: '4px' }}>
                         {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </button>
                 </div>
@@ -98,7 +98,7 @@ const FuelManagement = ({ fuelRefills, trips, addFuelRefill, deleteFuelRefill })
                 <div style={{ fontSize: '1.5rem', fontWeight: '900', color: stats.balance >= 0 ? 'var(--primary)' : 'var(--danger)', margin: '4px 0' }}>
                     ฿{stats.balance.toLocaleString()}
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px', paddingTop: '10px', borderTop: '1px solid var(--glass-border)' }}>
                     <div>
                         <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)' }}>โอนเข้าทั้งหมด</div>
                         <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#22c55e' }}>฿{stats.totalRefills.toLocaleString()}</div>
@@ -111,7 +111,7 @@ const FuelManagement = ({ fuelRefills, trips, addFuelRefill, deleteFuelRefill })
             </div>
 
             {showForm && (
-                <form onSubmit={handleSubmit} className="glass-card slide-up" style={{ padding: '1.25rem', marginBottom: '1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <form onSubmit={handleSubmit} className="glass-card slide-up" style={{ padding: '1.25rem', marginBottom: '1rem', background: 'var(--glass-border)', borderRadius: '20px', border: '1px solid var(--glass-border)' }}>
                     <div style={{ display: 'grid', gap: '0.8rem' }}>
                         <div className="input-field-premium">
                             <label style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginBottom: '4px', display: 'block' }}>วันที่โอน</label>
@@ -132,7 +132,7 @@ const FuelManagement = ({ fuelRefills, trips, addFuelRefill, deleteFuelRefill })
             )}
 
             {isExpanded && (
-                <div className="table-responsive" style={{ maxHeight: '250px', overflowY: 'auto', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="table-responsive" style={{ maxHeight: '250px', overflowY: 'auto', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
                     <table className="trip-table" style={{ fontSize: '0.8rem' }}>
                         <thead>
                             <tr>

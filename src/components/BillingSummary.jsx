@@ -168,7 +168,7 @@ const BillingSummary = ({ trips, currentMonth, currentYear, driverName = "นา
                         {isDriverCopy ? 'ใบแจ้งยอด (สำหรับคนขับ)' : 'ใบวางบิล (สำหรับสำนักงาน)'}
                     </span>
                 </div>
-                <button className="btn" onClick={() => window.print()} style={{ background: '#000', color: '#fff', border: 'none', padding: '6px 16px', borderRadius: '6px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <button className="btn" onClick={() => window.print()} style={{ background: '#000', color: 'var(--text-main)', border: 'none', padding: '6px 16px', borderRadius: '6px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Printer size={14} /> พิมพ์เอกสาร
                 </button>
             </div>
@@ -287,14 +287,14 @@ const BillingSummary = ({ trips, currentMonth, currentYear, driverName = "นา
                 {/* GRAND TOTAL SUMMARY */}
                 <table style={{ width: '100%', borderCollapse: 'collapse', border: '2px solid #cbd5e1' }}>
                     <tfoot>
-                        <tr style={{ background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)', color: 'white' }}>
-                            <td colSpan={3} style={{ ...tdStyle, background: 'transparent', padding: '20px', textAlign: 'right', fontSize: '1.1rem', fontWeight: '700', border: 'none', color: '#fff' }}>
+                        <tr style={{ background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)', color: 'var(--text-main)' }}>
+                            <td colSpan={3} style={{ ...tdStyle, background: 'transparent', padding: '20px', textAlign: 'right', fontSize: '1.1rem', fontWeight: '700', border: 'none', color: 'var(--text-main)' }}>
                                 {isDriverCopy ? 'รวมเงินที่ได้รับสุทธิ (Total Pay):' : 'สรุปยอดสุทธิทั้งสิ้น (Total Revenue):'}
                             </td>
-                            <td style={{ ...tdStyle, background: 'transparent', padding: '20px', textAlign: 'center', fontSize: '1.1rem', fontWeight: '600', width: '120px', border: 'none', borderLeft: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}>
+                            <td style={{ ...tdStyle, background: 'transparent', padding: '20px', textAlign: 'center', fontSize: '1.1rem', fontWeight: '600', width: '120px', border: 'none', borderLeft: '1px solid var(--glass-border)', color: 'var(--text-main)' }}>
                                 {totalCount} <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>รายการ</span>
                             </td>
-                            <td style={{ ...tdStyle, background: 'transparent', padding: '20px', textAlign: 'right', fontSize: '1.6rem', fontWeight: '800', width: '220px', border: 'none', borderLeft: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}>
+                            <td style={{ ...tdStyle, background: 'transparent', padding: '20px', textAlign: 'right', fontSize: '1.6rem', fontWeight: '800', width: '220px', border: 'none', borderLeft: '1px solid var(--glass-border)', color: 'var(--text-main)' }}>
                                 ฿{grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                             </td>
                         </tr>

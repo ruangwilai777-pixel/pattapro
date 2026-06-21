@@ -86,12 +86,12 @@ const RouteManagement = ({ routePresets: globalPresets, onSave, onDelete, curren
                     จัดการราคา / แผนงาน (Preset)
                 </h3>
 
-                <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: '0.5rem', padding: '0.25rem' }}>
-                    <button onClick={() => handleMonthChange(-1)} style={{ background: 'none', border: 'none', color: 'white', padding: '4px 8px', cursor: 'pointer' }}>&lt;</button>
+                <div style={{ display: 'flex', alignItems: 'center', background: 'var(--glass-border)', borderRadius: '0.5rem', padding: '0.25rem' }}>
+                    <button onClick={() => handleMonthChange(-1)} style={{ background: 'none', border: 'none', color: 'var(--text-main)', padding: '4px 8px', cursor: 'pointer' }}>&lt;</button>
                     <div style={{ padding: '0 12px', fontSize: '0.9rem', color: 'var(--primary)', fontWeight: 'bold', minWidth: '140px', textAlign: 'center' }}>
                         {months[manageMonth]} {manageYear}
                     </div>
-                    <button onClick={() => handleMonthChange(1)} style={{ background: 'none', border: 'none', color: 'white', padding: '4px 8px', cursor: 'pointer' }}>&gt;</button>
+                    <button onClick={() => handleMonthChange(1)} style={{ background: 'none', border: 'none', color: 'var(--text-main)', padding: '4px 8px', cursor: 'pointer' }}>&gt;</button>
                 </div>
             </div>
 
@@ -100,7 +100,7 @@ const RouteManagement = ({ routePresets: globalPresets, onSave, onDelete, curren
                     <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px', color: 'var(--text-dim)' }}>ชื่อสายงาน</label>
                     <input
                         type="text"
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
+                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--glass-border)', borderRadius: '0.5rem', color: 'var(--text-main)' }}
                         placeholder="เช่น ชลบุรี-ระยอง"
                         value={formData.route}
                         onChange={e => setFormData({ ...formData, route: e.target.value })}
@@ -110,7 +110,7 @@ const RouteManagement = ({ routePresets: globalPresets, onSave, onDelete, curren
                     <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px', color: 'var(--text-dim)' }}>ค่าเที่ยว (บาท)</label>
                     <input
                         type="number"
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
+                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--glass-border)', borderRadius: '0.5rem', color: 'var(--text-main)' }}
                         placeholder="0"
                         value={formData.price}
                         onChange={e => setFormData({ ...formData, price: e.target.value })}
@@ -120,7 +120,7 @@ const RouteManagement = ({ routePresets: globalPresets, onSave, onDelete, curren
                     <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px', color: 'var(--text-dim)' }}>ค่าจ้าง (บาท)</label>
                     <input
                         type="number"
-                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
+                        style={{ width: '100%', padding: '0.75rem', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--glass-border)', borderRadius: '0.5rem', color: 'var(--text-main)' }}
                         placeholder="0"
                         value={formData.wage}
                         onChange={e => setFormData({ ...formData, wage: e.target.value })}
@@ -131,9 +131,9 @@ const RouteManagement = ({ routePresets: globalPresets, onSave, onDelete, curren
                 </button>
             </form>
 
-            <div style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '0.75rem' }}>
+            <div style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid var(--glass-border)', borderRadius: '0.75rem' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
-                    <thead style={{ background: 'rgba(255,255,255,0.02)' }}>
+                    <thead style={{ background: 'var(--glass-border)' }}>
                         <tr>
                             <th style={{ padding: '12px', textAlign: 'left', color: 'var(--text-dim)' }}>สายงาน</th>
                             <th style={{ padding: '12px', textAlign: 'left', color: '#22c55e' }}>ค่าเที่ยว</th>
@@ -146,7 +146,7 @@ const RouteManagement = ({ routePresets: globalPresets, onSave, onDelete, curren
                             <tr><td colSpan={4} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-dim)' }}>ยังไม่มีข้อมูลของเดือนนี้</td></tr>
                         ) : (
                             Object.entries(localPresets).map(([route, data]) => (
-                                <tr key={route} style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                                <tr key={route} style={{ borderTop: '1px solid var(--glass-border)' }}>
                                     <td style={{ padding: '12px' }}>{route}</td>
                                     <td style={{ padding: '12px', fontWeight: 'bold' }}>{parseInt(data.price).toLocaleString()}</td>
                                     <td style={{ padding: '12px' }}>{parseInt(data.wage).toLocaleString()}</td>

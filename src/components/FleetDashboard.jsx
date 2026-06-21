@@ -1,6 +1,5 @@
 import React from 'react';
 import { Truck, DollarSign, Fuel, Users, CreditCard, ShoppingCart, Settings, Wallet, Banknote, Undo2 } from 'lucide-react';
-import bgSrc from '../assets/admin-bg-premium.png';
 
 const StatCard = ({ title, value, icon: _Icon, color, subValue }) => {
     const getColorClass = () => {
@@ -91,11 +90,11 @@ const FleetDashboard = ({ stats, yearlyStats, isSupabaseReady, trips = [], curre
                 .brand-subtitle { font-size: 10px; letter-spacing: 8px; color: var(--primary); margin: 5px 0 0 0; font-weight: 700; }
                 
                 .header-right { display: flex; align-items: center; gap: 1rem; }
-                .status-pill { padding: 6px 12px; border-radius: 20px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: #94a3b8; box-shadow: none; }
+                .status-pill { padding: 6px 12px; border-radius: 20px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 6px; border: 1px solid var(--glass-border); background: var(--glass-border); color: #94a3b8; box-shadow: none; }
                 .status-pill.online { color: #2dd4bf; border-color: rgba(45, 212, 191, 0.2); background: rgba(45, 212, 191, 0.05); }
                 .status-pill.online .dot { width: 6px; height: 6px; background: #2dd4bf; border-radius: 50%; box-shadow: 0 0 10px #2dd4bf; }
                 
-                .view-switcher-glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 4px; border-radius: 12px; display: flex; gap: 4px; box-shadow: none; }
+                .view-switcher-glass { background: var(--glass-border); border: 1px solid var(--glass-border); padding: 4px; border-radius: 12px; display: flex; gap: 4px; box-shadow: none; }
                 .switch-btn { padding: 6px 16px; border: none; background: none; color: var(--text-dim); cursor: pointer; border-radius: 8px; font-size: 12px; font-weight: 700; transition: all 0.2s; }
                 .switch-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(129, 140, 248, 0.3); }
                 
@@ -106,7 +105,7 @@ const FleetDashboard = ({ stats, yearlyStats, isSupabaseReady, trips = [], curre
                 
                 .summary-grid-fixed { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; padding-top: 5px; }
                 .summary-grid-fixed::-webkit-scrollbar { height: 4px; }
-                .summary-grid-fixed::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+                .summary-grid-fixed::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
 
                 .summary-card-mini { 
                     flex: 0 0 135px; 
@@ -118,7 +117,7 @@ const FleetDashboard = ({ stats, yearlyStats, isSupabaseReady, trips = [], curre
                     box-shadow: 
                         0 10px 20px -5px rgba(0,0,0,0.4),
                         0 4px 6px -2px rgba(0,0,0,0.2),
-                        inset 0 1px 1px rgba(255,255,255,0.1);
+                        inset 0 1px 1px var(--glass-border);
                     min-height: 85px;
                     justify-content: center;
                     transform-style: preserve-3d;
@@ -130,7 +129,7 @@ const FleetDashboard = ({ stats, yearlyStats, isSupabaseReady, trips = [], curre
                 .sub-value { font-size: 11px; opacity: 0.8; }
 
                 /* Dark Theme Premium Styles */
-                .bg-white { background: rgba(255, 255, 255, 0.03); color: var(--text-main); border: 1px solid rgba(255, 255, 255, 0.05); }
+                .bg-white { background: #ffffff; color: #1e293b; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
                 .bg-blue-soft { background: rgba(56, 189, 248, 0.08); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); }
                 .bg-purple-soft { background: rgba(168, 85, 247, 0.08); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.2); }
                 .bg-green-soft { background: rgba(34, 197, 94, 0.08); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2); }

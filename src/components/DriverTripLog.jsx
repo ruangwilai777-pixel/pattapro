@@ -211,9 +211,9 @@ const DriverTripLog = ({ trips, currentMonth, currentYear, driverName, isDriverC
                                     padding: '20px',
                                     background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
                                     borderRadius: '16px',
-                                    boxShadow: '0 10px 15px -3px rgba(30, 41, 59, 0.2)'
+                                    boxShadow: '0 10px 15px -3px var(--glass-bg)'
                                 }}>
-                                    <div style={{ fontSize: '14px', fontWeight: '600', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>รวมยอดสุทธิทั้งสิ้น</div>
+                                    <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>รวมยอดสุทธิทั้งสิ้น</div>
                                     <div style={{ fontSize: '32px', fontWeight: '900', color: '#ffffff', letterSpacing: '-1px' }}>฿{totalAll.toLocaleString()}</div>
                                 </div>
                             </>

@@ -179,6 +179,29 @@
         border-radius: 12px !important;
       }
     }
+  
+    /* Hide the edit column (11th column) in the admin's detailed driver trip log */
+    .trip-log-card table th:nth-child(11),
+    .trip-log-card table td:nth-child(11) {
+      display: none !important;
+    }
+    
+    /* Balance column widths to look more spacious and readable */
+    .trip-log-card table th.col-narrow,
+    .trip-log-card table th.col-mid {
+      width: auto !important;
+    }
+
+    .trip-log-card table th:nth-child(n+4),
+    .trip-log-card table td:nth-child(n+4) {
+      padding-right: 8px !important;
+    }
+
+    /* Prevent the 'สายงาน' column from taking too much space */
+    .trip-log-card table th.col-route {
+      width: 20% !important;
+    }
+    
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -208,135 +231,149 @@
 </head>
 
 <body>
+  <script>
+    if (window.location.pathname.includes('/admin') && !window.location.hash.includes('admin')) {
+      window.location.replace('/#/admin');
+    }
+  </script>
+
   <div id="root"></div>
   <script>
-    // Direct redirect to the new admin panel if the URL contains admin hash
-    (function() {
-      function checkHash() {
-        if (window.location.hash.includes('admin')) {
-          window.location.replace('/admin');
-        }
-      }
-      window.addEventListener('load', checkHash);
-      window.addEventListener('hashchange', checkHash);
-      checkHash();
-    })();
+    
+
+    
   </script>
-  
-  <script>
-    // Custom global touch-pinch gesture zoom and perfectly symmetrical floating controller for driver overlays (Billing, TripLog, Slip)
-    (function() {
-      var zoomLevel = 1.0;
-      var activeTarget = null;
-      var zoomWidget = null;
 
-      function getActiveOverlay() {
-        return document.querySelector('.glass-card, .trip-log-card, .slip-card-premium');
-      }
+    
+    
 
-      function applyZoom(target, level) {
-        if (target) {
-          target.style.zoom = level;
-          if (zoomWidget) {
-            var txt = zoomWidget.querySelector('.zoom-txt');
-            if (txt) txt.textContent = 'ซูม: ' + Math.round(level * 100) + '%';
-          }
-        }
-      }
+    
+    
 
-      var touchStartDist = 0;
-      var initialScale = 1.0;
+    
+    
 
-      document.addEventListener('touchstart', function(e) {
-        if (e.touches.length === 2) {
-          var target = getActiveOverlay();
-          if (target) {
-            activeTarget = target;
-            var t1 = e.touches[0];
-            var t2 = e.touches[1];
-            touchStartDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-            initialScale = zoomLevel;
-          }
-        }
-      }, { passive: true });
+    
+    
 
-      document.addEventListener('touchmove', function(e) {
-        if (e.touches.length === 2 && activeTarget && touchStartDist > 0) {
-          var t1 = e.touches[0];
-          var t2 = e.touches[1];
-          var dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-          var factor = dist / touchStartDist;
-          zoomLevel = Math.min(1.8, Math.max(0.6, initialScale * factor));
-          applyZoom(activeTarget, zoomLevel);
-        }
-      }, { passive: true });
+    
+    
 
-      document.addEventListener('touchend', function(e) {
-        if (e.touches.length < 2) {
-          touchStartDist = 0;
-          activeTarget = null;
-        }
-      });
+    
+    
 
-      function updateZoomWidget() {
-        var target = getActiveOverlay();
-        if (target) {
-          if (!zoomWidget) {
-            zoomWidget = document.createElement('div');
-            zoomWidget.className = 'no-print';
-            zoomWidget.style.cssText = 'position: fixed; top: 16px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 6px 14px; display: flex; align-items: center; justify-content: center; gap: 12px; z-index: 999999; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; transition: all 0.3s ease;';
+    
+    
+
+    
+    
+
+    <script>
+      // DOM Patch V9 - Uniform padding approach: reserve right space for icon in ALL cells
+      document.addEventListener('DOMContentLoaded', () => {
+          const style = document.createElement('style');
+          style.textContent = `
+            /* === UNIFORM RIGHT-PADDING on ALL numeric columns (th, td, tfoot) === */
+            /* This reserves 16px on the right for the icon zone across ALL rows */
             
-            zoomWidget.innerHTML = [
-              // Left Group (64px total width)
-              '<div style="display: flex; align-items: center; gap: 8px; width: 64px; justify-content: flex-start;">',
-                '<button class="zoom-btn-reset" title="รีเซ็ต" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: #818cf8; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; outline: none; -webkit-tap-highlight-color: transparent; transition: all 0.2s;">↺</button>',
-                '<button class="zoom-btn-minus" title="ซูมออก" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; outline: none; -webkit-tap-highlight-color: transparent; transition: all 0.2s;">-</button>',
-              '</div>',
-              
-              // Center Group
-              '<span class="zoom-txt" style="font-size: 12px; font-weight: 800; color: #f1f5f9; min-width: 76px; text-align: center; white-space: nowrap; letter-spacing: 0.5px;">ซูม: 100%</span>',
-              
-              // Right Group (64px total width)
-              '<div style="display: flex; align-items: center; gap: 8px; width: 64px; justify-content: flex-end;">',
-                '<button class="zoom-btn-plus" title="ซูมเข้า" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; justify-content: center; outline: none; -webkit-tap-highlight-color: transparent; transition: all 0.2s;">+</button>',
-                '<button class="zoom-btn-info" title="คำแนะนำ" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: #fbbf24; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; outline: none; -webkit-tap-highlight-color: transparent; transition: all 0.2s;">💡</button>',
-              '</div>'
-            ].join('');
+            /* Headers */
+            .trip-log-table-container thead th:nth-child(n+4) {
+              white-space: nowrap !important;
+              padding-right: 16px !important;
+              text-align: right !important;
+            }
+            /* First 3 headers stay as-is */
+            .trip-log-table-container thead th:nth-child(-n+3) {
+              white-space: nowrap !important;
+            }
 
-            zoomWidget.querySelector('.zoom-btn-minus').onclick = function(ev) {
-              ev.preventDefault();
-              zoomLevel = Math.max(0.6, zoomLevel - 0.1);
-              applyZoom(getActiveOverlay(), zoomLevel);
-            };
-            zoomWidget.querySelector('.zoom-btn-plus').onclick = function(ev) {
-              ev.preventDefault();
-              zoomLevel = Math.min(1.8, zoomLevel + 0.1);
-              applyZoom(getActiveOverlay(), zoomLevel);
-            };
-            zoomWidget.querySelector('.zoom-btn-reset').onclick = function(ev) {
-              ev.preventDefault();
-              zoomLevel = 1.0;
-              applyZoom(getActiveOverlay(), zoomLevel);
-            };
-            zoomWidget.querySelector('.zoom-btn-info').onclick = function(ev) {
-              ev.preventDefault();
-              alert("💡 คำแนะนำ: คุณสามารถใช้สองนิ้วกางบนหน้าจอเพื่อย่อ-ขยายซูมดูหน้านี้ได้เช่นกันครับ");
-            };
+            /* Data cells - ALL numeric columns get uniform padding */
+            .trip-log-table-container tbody td:nth-child(n+4) {
+              position: relative !important;
+              padding-right: 16px !important;
+            }
 
-            document.body.appendChild(zoomWidget);
-          }
-        } else {
-          if (zoomWidget) {
-            zoomWidget.remove();
-            zoomWidget = null;
-            zoomLevel = 1.0;
-          }
-        }
-      }
+            /* The flex div inside data cells: fill full width, right-align content */
+            .trip-log-table-container tbody td > div[style*="flex"] {
+              gap: 0px !important;
+              width: 100% !important;
+              justify-content: flex-end !important;
+            }
 
-      setInterval(updateZoomWidget, 500);
-    })();
-  </script>
+            /* Number span: takes full width */
+            .trip-log-table-container tbody td > div[style*="flex"] > span {
+              text-align: right !important;
+            }
+
+            /* Icon button: absolute in the reserved 16px right zone */
+            .trip-log-table-container tbody td > div[style*="flex"] > button {
+              position: absolute !important;
+              right: 2px !important;
+              top: 50% !important;
+              transform: translateY(-50%) !important;
+              margin: 0 !important;
+              z-index: 2 !important;
+            }
+
+            /* Footer/Total row */
+            .trip-log-table-container tfoot td:nth-child(n+4) {
+              padding-right: 16px !important;
+            }
+
+            /* Fullscreen */
+            .trip-log-card:fullscreen {
+              background: #fff !important;
+              overflow: auto !important;
+              padding: 20px !important;
+            }
+          `;
+          document.head.appendChild(style);
+
+          setInterval(() => {
+              // Fullscreen button
+              document.querySelectorAll('.trip-log-card').forEach(card => {
+                  if (card.dataset.fsBtn) return;
+                  card.dataset.fsBtn = "1";
+                  card.style.position = 'relative';
+                  const btn = document.createElement('button');
+                  btn.textContent = '⛶ ขยายเต็มจอ';
+                  btn.style.cssText = 'position:absolute;top:12px;right:15px;z-index:1000;background:#f1f5f9;color:#475569;border:1px solid #cbd5e1;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer;';
+                  btn.onclick = () => {
+                      if (!document.fullscreenElement) {
+                          card.requestFullscreen().catch(()=>{});
+                          btn.textContent = '✖ ย่อหน้าจอ';
+                      } else {
+                          document.exitFullscreen();
+                      }
+                  };
+                  card.appendChild(btn);
+              });
+              if (!document.fullscreenElement) {
+                  document.querySelectorAll('button').forEach(btn => {
+                      if (btn.textContent.includes('ย่อหน้าจอ')) btn.textContent = '⛶ ขยายเต็มจอ';
+                  });
+              }
+
+              // Fix negative values
+              document.querySelectorAll('.trip-log-table-container tbody tr.table-row-hover').forEach(row => {
+                  if (row.dataset.fixedNeg) return;
+                  for (let i = 3; i <= 9; i++) {
+                      const td = row.cells[i];
+                      if (!td) continue;
+                      const span = td.querySelector('span');
+                      if (span) {
+                          let txt = span.textContent.trim();
+                          if (txt.startsWith('-') && txt !== '-') {
+                              span.textContent = txt.replace(/^-/, '');
+                          }
+                      }
+                  }
+                  row.dataset.fixedNeg = "1";
+              });
+          }, 1200);
+      });
+    </script>
+    
 </body>
 
 </html>

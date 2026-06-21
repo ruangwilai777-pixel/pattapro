@@ -284,7 +284,7 @@ const DriverEntry = () => {
                     <div className="brand-group">
 
                         <div className="logo-group" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                            <img src={logoBase64} alt="ภัทธา ทรานสปอร์ต Logo" style={{ height: '90px', width: 'auto', borderRadius: '15px', boxShadow: '0 10px 24px rgba(0,0,0,0.6)', border: '2px solid rgba(255,255,255,0.1)', display: 'block' }} />
+                            <img src={logoBase64} alt="ภัทธา ทรานสปอร์ต Logo" style={{ height: '90px', width: 'auto', borderRadius: '15px', boxShadow: '0 10px 24px rgba(0,0,0,0.6)', border: '2px solid var(--glass-border)', display: 'block' }} />
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                 <h1 className="brand-logo" style={{ fontSize: '1.3rem', margin: 0, lineHeight: '1.2', fontWeight: '800' }}>ภัทธา ทรานสปอร์ต</h1>
                                 <span className="subtitle" style={{ fontSize: '0.7rem', color: 'var(--text-dim)', letterSpacing: '2px', fontWeight: '600' }}>PATTA TRANSPORT</span>
@@ -566,7 +566,7 @@ const DriverEntry = () => {
                         <button
                             type="button"
                             className="btn-premium"
-                            style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', color: 'white' }}
+                            style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', color: 'var(--text-main)' }}
                             onClick={async () => {
                                 if (!formData.driverName.trim()) {
                                     alert('⚠️ กรุณาพิมพ์ "ชื่อคนขับ" ของคุณก่อนดูสลิปครับ');
@@ -584,7 +584,7 @@ const DriverEntry = () => {
                         <button
                             type="button"
                             className="btn-premium"
-                            style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)', color: 'white' }}
+                            style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4338ca 100%)', color: 'var(--text-main)' }}
                             onClick={async () => {
                                 if (!formData.driverName.trim()) {
                                     alert('⚠️ กรุณาพิมพ์ "ชื่อคนขับ" ของคุณก่อนดูใบวางบิลครับ');
@@ -602,7 +602,7 @@ const DriverEntry = () => {
                         <button
                             type="button"
                             className="btn-premium"
-                            style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'white' }}
+                            style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: 'var(--text-main)' }}
                             onClick={async () => {
                                 if (!formData.driverName.trim()) {
                                     alert('⚠️ กรุณาพิมพ์ "ชื่อคนขับ" ของคุณก่อนดูตารางลงงานครับ');
@@ -624,7 +624,7 @@ const DriverEntry = () => {
                                 background: showHistory
                                     ? 'linear-gradient(135deg, #475569 0%, #1e293b 100%)'
                                     : 'linear-gradient(135deg, #334155 0%, #0f172a 100%)',
-                                color: 'white',
+                                color: 'var(--text-main)',
                                 gridColumn: 'span 2'
                             }}
                             onClick={() => setShowHistory(!showHistory)}
@@ -705,7 +705,7 @@ const DriverEntry = () => {
                             onClick={() => setShowBillingDoc(false)}
                             style={{
                                 position: 'absolute', right: '-10px', top: '-10px', zIndex: 10001,
-                                background: '#f43f5e', color: 'white', border: 'none',
+                                background: '#f43f5e', color: 'var(--text-main)', border: 'none',
                                 borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
@@ -735,7 +735,7 @@ const DriverEntry = () => {
                             onClick={() => setShowTripLog(false)}
                             style={{
                                 position: 'absolute', right: '-10px', top: '-10px', zIndex: 10001,
-                                background: '#f43f5e', color: 'white', border: 'none',
+                                background: '#f43f5e', color: 'var(--text-main)', border: 'none',
                                 borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
@@ -787,7 +787,7 @@ const DriverEntry = () => {
                 .full-width { grid-column: 1 / -1; }
                 .input-field-premium { display: flex; flex-direction: column; gap: 0.5rem; }
                 .input-field-premium label { font-size: 0.75rem; color: var(--text-dim); margin-left: 4px; display: flex; align-items: center; gap: 6px; font-weight: 500; }
-                .input-premium { background: rgba(0, 0, 0, 0.2)!important; border: 1px solid rgba(255, 255, 255, 0.08)!important; border-radius: 1rem!important; padding: 0.8rem 1rem!important; color: white!important; font-size: 1rem!important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)!important; }
+                .input-premium { background: rgba(0, 0, 0, 0.2)!important; border: 1px solid var(--glass-border)!important; border-radius: 1rem!important; padding: 0.8rem 1rem!important; color: white!important; font-size: 1rem!important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)!important; }
                 .form-actions { margin-top: 1.5rem; display: flex; gap: 0.75rem; }
                 .w-full { width: 100%; }
                 .filter-group { display: grid; grid-template-columns: 2fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
@@ -812,7 +812,7 @@ const DriverEntry = () => {
                 .success-card-premium { background: var(--bg-card); border: 1px solid var(--primary); padding: 3rem 2rem; border-radius: 2.5rem; text-align: center; max-width: 320px; width: 100%; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8); }
                 .success-icon-wrapper { width: 80px; height: 80px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto; border: 2px solid rgba(16, 185, 129, 0.2); animation: bounce 1s infinite alternate; }
                 .file-upload-section { margin-top: 8px; display: flex; gap: 8px; }
-                .file-upload-btn { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: rgba(255, 255, 255, 0.03); border: 1px dashed rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.75rem; color: var(--text-dim); cursor: pointer; transition: all 0.3s ease; width: 100%; justify-content: center; }
+                .file-upload-btn { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--glass-border); border: 1px dashed var(--glass-border); border-radius: 8px; font-size: 0.75rem; color: var(--text-dim); cursor: pointer; transition: all 0.3s ease; width: 100%; justify-content: center; }
                 .file-upload-btn:hover { background: rgba(129, 140, 248, 0.05); border-color: var(--primary); color: var(--primary); }
                 .file-upload-btn.has-file { background: rgba(16, 185, 129, 0.05); border-style: solid; border-color: #10b981; color: #10b981; }
                 .spin { animation: spin 1s linear infinite; }
