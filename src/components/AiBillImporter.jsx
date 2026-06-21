@@ -552,8 +552,21 @@ const AiBillImporter = ({
                         </table>
                     </div>
 
-                    {/* Sync Button */}
-                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    {/* Sync Button & Summary */}
+                    <div style={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center', 
+                        marginTop: '1rem',
+                        paddingTop: '1.25rem',
+                        borderTop: '1px solid var(--glass-border)',
+                        flexWrap: 'wrap', 
+                        gap: '1rem' 
+                    }}>
+                        <div style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: 700 }}>
+                            ยอดรวมค่าเที่ยวที่ดึงได้ทั้งหมด: <span style={{ color: '#2dd4bf', fontSize: '1.1rem', fontWeight: 900, marginLeft: '6px' }}>฿{parsedTrips.filter(t => t.selected).reduce((sum, t) => sum + t.price, 0).toLocaleString('th-TH')}</span>
+                        </div>
+                        
                         <button
                             onClick={handleSync}
                             disabled={syncing}
