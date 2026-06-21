@@ -10,23 +10,25 @@ import BillingSummary from '../components/BillingSummary';
 import DriverTripLog from '../components/DriverTripLog';
 import DataHub from '../components/DataHub';
 import Settings from '../components/Settings';
+import AiBillImporter from '../components/AiBillImporter';
 import DriverEntry from './DriverEntry';
 import { logoBase64 } from '../assets/logoBase64';
 
 import {
     LayoutDashboard, TableProperties, Users, Settings as SettingsIcon, Plus,
-    ChevronLeft, ChevronRight, Download
+    ChevronLeft, ChevronRight, Download, Sparkles
 } from 'lucide-react';
 
 /* ──────────────────────────────────────────────
    Tab definitions
 ────────────────────────────────────────────── */
 const TABS = [
-    { id: 'overview', label: 'ภาพรวมระบบ',   icon: LayoutDashboard },
-    { id: 'table',    label: 'ตารางงาน',       icon: TableProperties },
-    { id: 'driver',   label: 'ลงงานคนขับ (+)', icon: Plus },
-    { id: 'summary',  label: 'สรุปยอดคนขับ',  icon: Users },
-    { id: 'settings', label: 'การตั้งค่า',     icon: SettingsIcon },
+    { id: 'overview',  label: 'ภาพรวมระบบ',   icon: LayoutDashboard },
+    { id: 'table',     label: 'ตารางงาน',       icon: TableProperties },
+    { id: 'ai_import', label: 'นำเข้าบิล AI',   icon: Sparkles },
+    { id: 'driver',    label: 'ลงงานคนขับ (+)', icon: Plus },
+    { id: 'summary',   label: 'สรุปยอดคนขับ',  icon: Users },
+    { id: 'settings',  label: 'การตั้งค่า',     icon: SettingsIcon },
 ];
 
 const months = [
@@ -215,6 +217,23 @@ const Dashboard = () => {
                     routePresets={routePresets}
                     stats={stats}
                 />
+            )}
+
+            {/* ══════════════════════════════════════
+                TAB: นำเข้าบิลด้วย AI
+            ══════════════════════════════════════ */}
+            {activeTab === 'ai_import' && (
+                <div className="fade-in">
+                    <AiBillImporter
+                        trips={trips}
+                        addTrip={addTrip}
+                        updateTrip={updateTrip}
+                        fetchTrips={fetchTrips}
+                        routePresets={routePresets}
+                        currentMonth={currentMonth}
+                        currentYear={currentYear}
+                    />
+                </div>
             )}
 
             {/* ══════════════════════════════════════
