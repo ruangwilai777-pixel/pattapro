@@ -2,6 +2,7 @@ import React from 'react';
 import { Trash2, Edit2, Download, Camera } from 'lucide-react';
 
 const TripTable = ({ trips, onDelete, onEdit, onExport }) => {
+    const [activeImage, setActiveImage] = React.useState(null);
     return (
         <div className="glass-card fade-in" style={{ marginTop: '2rem' }}>
             <div className="header" style={{ padding: '1.5rem 1.5rem 0 1.5rem', marginBottom: '0.5rem' }}>
@@ -47,7 +48,12 @@ const TripTable = ({ trips, onDelete, onEdit, onExport }) => {
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                                             <span>{parseFloat(trip.fuel).toLocaleString()} ฿</span>
                                             {(trip.fuel_bill_url || trip.fuel_url) && (
-                                                <a href={trip.fuel_bill_url || trip.fuel_url} target="_blank" rel="noreferrer" title="กดดูรูปน้ำมัน" className="bill-thumbnail-link">
+                                                <a 
+                                                    href={trip.fuel_bill_url || trip.fuel_url} 
+                                                    onClick={(e) => { e.preventDefault(); setActiveImage(trip.fuel_bill_url || trip.fuel_url); }}
+                                                    title="กดดูรูปน้ำมัน" 
+                                                    className="bill-thumbnail-link"
+                                                >
                                                     <img 
                                                         src={trip.fuel_bill_url || trip.fuel_url} 
                                                         alt="รูปน้ำมัน" 
@@ -62,7 +68,12 @@ const TripTable = ({ trips, onDelete, onEdit, onExport }) => {
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                                             <span>{parseFloat(trip.maintenance || 0).toLocaleString()} ฿</span>
                                             {(trip.maintenance_bill_url || trip.maintenance_url) && (
-                                                <a href={trip.maintenance_bill_url || trip.maintenance_url} target="_blank" rel="noreferrer" title="กดดูรูปค่าซ่อม" className="bill-thumbnail-link">
+                                                <a 
+                                                    href={trip.maintenance_bill_url || trip.maintenance_url} 
+                                                    onClick={(e) => { e.preventDefault(); setActiveImage(trip.maintenance_bill_url || trip.maintenance_url); }}
+                                                    title="กดดูรูปค่าซ่อม" 
+                                                    className="bill-thumbnail-link"
+                                                >
                                                     <img 
                                                         src={trip.maintenance_bill_url || trip.maintenance_url} 
                                                         alt="รูปค่าซ่อม" 
@@ -77,7 +88,12 @@ const TripTable = ({ trips, onDelete, onEdit, onExport }) => {
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                                             <span>+{parseFloat(trip.basket || 0).toLocaleString()} ฿</span>
                                             {(trip.basket_bill_url || trip.basket_url) && (
-                                                <a href={trip.basket_bill_url || trip.basket_url} target="_blank" rel="noreferrer" title="กดดูรูปตะกร้า" className="bill-thumbnail-link">
+                                                <a 
+                                                    href={trip.basket_bill_url || trip.basket_url} 
+                                                    onClick={(e) => { e.preventDefault(); setActiveImage(trip.basket_bill_url || trip.basket_url); }}
+                                                    title="กดดูรูปตะกร้า" 
+                                                    className="bill-thumbnail-link"
+                                                >
                                                     <img 
                                                         src={trip.basket_bill_url || trip.basket_url} 
                                                         alt="รูปตะกร้า" 
@@ -111,6 +127,38 @@ const TripTable = ({ trips, onDelete, onEdit, onExport }) => {
                     </tbody>
                 </table>
             </div>
+
+            {activeImage && (
+                <div 
+                    onClick={() => setActiveImage(null)}
+                    style={{
+                        position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+                        background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        zIndex: 9999, cursor: 'zoom-out', backdropFilter: 'blur(8px)',
+                        transition: 'all 0.3s ease'
+                    }}
+                >
+                    <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%' }} onClick={e => e.stopPropagation()}>
+                        <img 
+                            src={activeImage} 
+                            alt="Receipt Bill" 
+                            style={{ maxWidth: '100%', maxHeight: '85vh', borderRadius: '12px', boxShadow: '0 24px 64px rgba(0,0,0,0.8)' }} 
+                        />
+                        <button 
+                            onClick={() => setActiveImage(null)}
+                            style={{
+                                position: 'absolute', top: '-1rem', right: '-1rem',
+                                background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%',
+                                width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem', boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                            }}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <style>{`
                 .bill-thumbnail-link { display: inline-flex; align-items: center; justify-content: center; }
                 .receipt-thumbnail {

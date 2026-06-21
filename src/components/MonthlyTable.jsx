@@ -5,6 +5,7 @@ import SalarySlip from './SalarySlip';
 const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExport, onSelectDate, onEditTrip, onDeleteTrip, cnDeductions, setCnDeductions, showSlips = true, onlySlips = false, onBulkUpdateRoutePrice, routePresets }) => {
     const [selectedDriverForSlip, setSelectedDriverForSlip] = React.useState(null);
     const [selectedDriverForHistory, setSelectedDriverForHistory] = React.useState(null);
+    const [activeImage, setActiveImage] = React.useState(null);
 
     const [isBulkOpen, setIsBulkOpen] = React.useState(false);
     const [bulkMonth, setBulkMonth] = React.useState(currentMonth);
@@ -286,7 +287,12 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
                                                 <span>{trip.fuel > 0 ? trip.fuel.toLocaleString() : '-'}</span>
                                                 {(trip.fuel_bill_url || trip.fuel_url) && (
-                                                    <a href={trip.fuel_bill_url || trip.fuel_url} target="_blank" rel="noreferrer" title="กดดูรูปน้ำมัน" className="bill-thumbnail-link">
+                                                    <a 
+                                                        href={trip.fuel_bill_url || trip.fuel_url} 
+                                                        onClick={(e) => { e.preventDefault(); setActiveImage(trip.fuel_bill_url || trip.fuel_url); }}
+                                                        title="กดดูรูปน้ำมัน" 
+                                                        className="bill-thumbnail-link"
+                                                    >
                                                         <img 
                                                             src={trip.fuel_bill_url || trip.fuel_url} 
                                                             alt="รูปน้ำมัน" 
@@ -301,7 +307,12 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
                                                 <span>{trip.maintenance > 0 ? trip.maintenance.toLocaleString() : '-'}</span>
                                                 {(trip.maintenance_bill_url || trip.maintenance_url) && (
-                                                    <a href={trip.maintenance_bill_url || trip.maintenance_url} target="_blank" rel="noreferrer" title="กดดูรูปค่าซ่อม" className="bill-thumbnail-link">
+                                                    <a 
+                                                        href={trip.maintenance_bill_url || trip.maintenance_url} 
+                                                        onClick={(e) => { e.preventDefault(); setActiveImage(trip.maintenance_bill_url || trip.maintenance_url); }}
+                                                        title="กดดูรูปค่าซ่อม" 
+                                                        className="bill-thumbnail-link"
+                                                    >
                                                         <img 
                                                             src={trip.maintenance_bill_url || trip.maintenance_url} 
                                                             alt="รูปค่าซ่อม" 
@@ -315,7 +326,12 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
                                                 <span>{trip.basket > 0 ? trip.basket.toLocaleString() : '-'}</span>
                                                 {(trip.basket_bill_url || trip.basket_url) && (
-                                                    <a href={trip.basket_bill_url || trip.basket_url} target="_blank" rel="noreferrer" title="กดดูรูปตะกร้า" className="bill-thumbnail-link">
+                                                    <a 
+                                                        href={trip.basket_bill_url || trip.basket_url} 
+                                                        onClick={(e) => { e.preventDefault(); setActiveImage(trip.basket_bill_url || trip.basket_url); }}
+                                                        title="กดดูรูปตะกร้า" 
+                                                        className="bill-thumbnail-link"
+                                                    >
                                                         <img 
                                                             src={trip.basket_bill_url || trip.basket_url} 
                                                             alt="รูปตะกร้า" 
@@ -580,6 +596,38 @@ const MonthlyTable = ({ currentMonth, currentYear, trips, onMonthChange, onExpor
                     </div>
                 </div>
             )}
+
+            {activeImage && (
+                <div 
+                    onClick={() => setActiveImage(null)}
+                    style={{
+                        position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+                        background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        zIndex: 9999, cursor: 'zoom-out', backdropFilter: 'blur(8px)',
+                        transition: 'all 0.3s ease'
+                    }}
+                >
+                    <div style={{ position: 'relative', maxWidth: '90%', maxHeight: '90%' }} onClick={e => e.stopPropagation()}>
+                        <img 
+                            src={activeImage} 
+                            alt="Receipt Bill" 
+                            style={{ maxWidth: '100%', maxHeight: '85vh', borderRadius: '12px', boxShadow: '0 24px 64px rgba(0,0,0,0.8)' }} 
+                        />
+                        <button 
+                            onClick={() => setActiveImage(null)}
+                            style={{
+                                position: 'absolute', top: '-1rem', right: '-1rem',
+                                background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%',
+                                width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem', boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                            }}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <style>{`
                 .clickable-row:hover { background: var(--glass-border) !important; }
                 .trip-row-hover:hover { background: var(--glass-border); }

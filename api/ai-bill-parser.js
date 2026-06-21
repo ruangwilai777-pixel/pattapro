@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { pdfBase64, routePresets } = req.body || {};
+  const { pdfBase64, mimeType, routePresets } = req.body || {};
 
   if (!pdfBase64) {
     return res.status(400).json({ error: 'Missing pdfBase64 in request body' });
@@ -41,13 +41,13 @@ export default async function handler(req, res) {
     const pdfPart = {
       inlineData: {
         data: pdfBase64,
-        mimeType: 'application/pdf'
+        mimeType: mimeType || 'application/pdf'
       }
     };
 
     const prompt = `
 คุณเป็นผู้เชี่ยวชาญการตรวจเอกสารบัญชีและการขนส่งของไทย
-นี่คือไฟล์ PDF ใบแจ้งยอดค่าขนส่งสินค้า กรุณาแกะข้อมูลรายการออกมาทั้งหมด
+นี่คือเอกสาร PDF หรือรูปภาพใบแจ้งยอดค่าขนส่งสินค้า กรุณาแกะข้อมูลรายการออกมาทั้งหมด
 
 **กฎทางธุรกิจที่สำคัญในการคัดกรองเงิน (Business Rules):**
 1. รายการที่มีจำนวนเงินเป็น 300, 600 หรือ 1000 บาท คือ "ค่าตะกร้า" (Basket Fee)

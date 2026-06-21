@@ -29,12 +29,13 @@ const AiBillImporter = ({
 
     const handleFileChange = (e) => {
         const selected = e.target.files[0];
-        if (selected && selected.type === 'application/pdf') {
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+        if (selected && (selected.type === 'application/pdf' || selected.type.startsWith('image/'))) {
             setFile(selected);
             setParsedTrips([]);
             setSyncResult(null);
         } else {
-            alert('กรุณาเลือกไฟล์ PDF เท่านั้นครับ');
+            alert('กรุณาเลือกไฟล์ PDF หรือไฟล์รูปภาพ (PNG, JPG, JPEG) เท่านั้นครับ');
         }
     };
 
@@ -43,7 +44,7 @@ const AiBillImporter = ({
 
         setLoading(true);
         setSyncResult(null);
-        setLoadingStage('กำลังอ่านข้อมูลไฟล์ PDF...');
+        setLoadingStage('กำลังอ่านข้อมูลบิลเอกสาร...');
 
         try {
             // Read file as Base64
@@ -68,6 +69,7 @@ const AiBillImporter = ({
                 },
                 body: JSON.stringify({
                     pdfBase64: base64Data,
+                    mimeType: file.type, // Send dynamic mimeType (e.g. image/jpeg)
                     routePresets: availablePresets
                 })
             });
@@ -313,7 +315,7 @@ const AiBillImporter = ({
                         }}>
                             <input 
                                 type="file" 
-                                accept="application/pdf"
+                                accept="application/pdf, image/png, image/jpeg, image/jpg"
                                 onChange={handleFileChange}
                                 style={{
                                     position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
@@ -329,8 +331,8 @@ const AiBillImporter = ({
                                     </div>
                                 ) : (
                                     <div>
-                                        <div style={{ fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-dim)' }}>ลากไฟล์ PDF มาวางตรงนี้ หรือคลิกเพื่ออัปโหลด</div>
-                                        <div style={{ fontSize: '0.68rem', color: '#475569' }}>รองรับไฟล์ใบแจ้งหนี้ / บิลค่าเที่ยวขนส่ง</div>
+                                        <div style={{ fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-dim)' }}>ลากไฟล์ PDF หรือรูปภาพบิลมาวางตรงนี้ หรือคลิกเพื่ออัปโหลด</div>
+                                        <div style={{ fontSize: '0.68rem', color: '#475569' }}>รองรับไฟล์ PDF, PNG, JPG, JPEG (เช่น บิลค่าเที่ยวสแกนหรือแคปจาก Line)</div>
                                     </div>
                                 )}
                             </div>
